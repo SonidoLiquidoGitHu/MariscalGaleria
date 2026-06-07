@@ -326,8 +326,24 @@ export default function Gallery() {
     setDeleteDialogOpen(true)
   }
 
-  function confirmDelete() {
+  async function confirmDelete() {
     if (deleteTarget) {
+      // Delete from database first
+      try {
+        await fetch(`/api/products?id=${deleteTarget.id}`, { method: 'DELETE' })
+      } catch (err) {
+        console.error('Failed to delete product from DB:', err)
+      }
+      // Also remove from Cloudinary if media exists
+      if (deleteTarget.media?.length) {
+        for (const url of deleteTarget.media) {
+          try {
+            await fetch(`/api/upload?url=${encodeURIComponent(url)}`, { method: 'DELETE' })
+          } catch (err) {
+            console.error('Failed to delete from Cloudinary:', err)
+          }
+        }
+      }
       deleteProduct(deleteTarget.id)
     }
     setDeleteDialogOpen(false)

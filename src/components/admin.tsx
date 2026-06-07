@@ -879,8 +879,23 @@ function ReorderGallery() {
     reorderProducts(updated)
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (deleteTarget) {
+      // Delete from database
+      try {
+        const product = products.find(p => p.id === deleteTarget)
+        await fetch(`/api/products?id=${deleteTarget}`, { method: 'DELETE' })
+        // Also remove from Cloudinary
+        if (product?.media?.length) {
+          for (const url of product.media) {
+            try {
+              await fetch(`/api/upload?url=${encodeURIComponent(url)}`, { method: 'DELETE' })
+            } catch {}
+          }
+        }
+      } catch (err) {
+        console.error('Failed to delete product from DB:', err)
+      }
       deleteProduct(deleteTarget)
       toast({ title: 'Pieza eliminada', description: 'La pieza ha sido removida de la colección.' })
       setDeleteTarget(null)
@@ -925,8 +940,22 @@ function ReorderGallery() {
                   onMoveUp={() => handleMoveUp(index)}
                   onMoveDown={() => handleMoveDown(index)}
                   onDelete={() => setDeleteTarget(product.id)}
-                  onToggleActive={() => updateProduct(product.id, { isActive: !product.isActive })}
-                  onToggleFeatured={() => updateProduct(product.id, { isFeatured: !product.isFeatured })}
+                  onToggleActive={() => {
+                    updateProduct(product.id, { isActive: !product.isActive })
+                    fetch('/api/products', {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ id: product.id, isActive: !product.isActive }),
+                    }).catch(err => console.error('Failed to update product:', err))
+                  }}
+                  onToggleFeatured={() => {
+                    updateProduct(product.id, { isFeatured: !product.isFeatured })
+                    fetch('/api/products', {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ id: product.id, isFeatured: !product.isFeatured }),
+                    }).catch(err => console.error('Failed to update product:', err))
+                  }}
                 />
               ))}
             </div>
