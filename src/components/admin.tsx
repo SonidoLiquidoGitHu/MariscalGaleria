@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useRef, useCallback } from 'react'
+import React, { useState, useRef, useCallback, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Shield,
@@ -28,6 +28,14 @@ import {
   Save,
   Images,
   LayoutGrid,
+  Share2,
+  Facebook,
+  Instagram,
+  Link2,
+  Unlink,
+  ExternalLink,
+  AlertCircle,
+  Key,
 } from 'lucide-react'
 import {
   DndContext,
@@ -885,6 +893,368 @@ function ReorderGallery() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
+// SOCIAL ACCOUNTS CONNECTION
+// ═══════════════════════════════════════════════════════════════════════════════
+interface SocialAccount {
+  id: string
+  platform: string
+  accountId: string
+  accountName: string
+  accountPicture?: string | null
+  pageId?: string | null
+  igBusinessId?: string | null
+  isConnected: boolean
+  tokenExpiresAt?: string | null
+  lastUsedAt?: string | null
+  hasToken: boolean
+}
+
+function SocialAccounts() {
+  const { toast } = useToast()
+  const [accounts, setAccounts] = useState<SocialAccount[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [metaConfig, setMetaConfig] = useState<{ configured: boolean; appId?: string; appSecretSet?: boolean }>({ configured: false })
+  const [appId, setAppId] = useState('')
+  const [appSecret, setAppSecret] = useState('')
+  const [isSavingConfig, setIsSavingConfig] = useState(false)
+  const [disconnectingId, setDisconnectingId] = useState<string | null>(null)
+
+  // Fetch accounts on mount
+  useEffect(() => {
+    fetchAccounts()
+    fetchConfig()
+    // Check for success/error params from OAuth callback
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('social_success')) {
+      toast({ title: 'Cuentas conectadas', description: 'Tus cuentas de redes sociales han sido vinculadas correctamente.' })
+      window.history.replaceState({}, '', '/admin')
+    }
+    if (params.get('social_error')) {
+      toast({ title: 'Error de conexión', description: params.get('social_error') || 'No se pudieron vincular las cuentas.', variant: 'destructive' })
+      window.history.replaceState({}, '', '/admin')
+    }
+  }, [])
+
+  const fetchAccounts = async () => {
+    try {
+      const res = await fetch('/api/social/accounts')
+      const data = await res.json()
+      setAccounts(data.accounts || [])
+    } catch {
+      setAccounts([])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const fetchConfig = async () => {
+    try {
+      const res = await fetch('/api/social/config')
+      const data = await res.json()
+      setMetaConfig(data)
+      if (data.appId) setAppId(data.appId)
+    } catch {
+      // ignore
+    }
+  }
+
+  const handleSaveConfig = async () => {
+    if (!appId.trim() || !appSecret.trim()) {
+      toast({ title: 'Campos requeridos', description: 'Ingresa el App ID y App Secret de Meta.', variant: 'destructive' })
+      return
+    }
+    setIsSavingConfig(true)
+    try {
+      const res = await fetch('/api/social/config', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ appId: appId.trim(), appSecret: appSecret.trim() }),
+      })
+      const data = await res.json()
+      if (data.success) {
+        toast({ title: 'Configuración guardada', description: 'Las credenciales de Meta han sido guardadas.' })
+        fetchConfig()
+      } else {
+        toast({ title: 'Error', description: data.error || 'No se pudo guardar la configuración.', variant: 'destructive' })
+      }
+    } catch {
+      toast({ title: 'Error de conexión', description: 'No se pudo conectar con el servidor.', variant: 'destructive' })
+    } finally {
+      setIsSavingConfig(false)
+    }
+  }
+
+  const handleConnect = (platform: string) => {
+    // Redirect to Meta OAuth login
+    window.location.href = `/api/social/meta/login?platform=${platform}`
+  }
+
+  const handleDisconnect = async (accountId: string) => {
+    setDisconnectingId(accountId)
+    try {
+      const res = await fetch(`/api/social/meta/disconnect?accountId=${accountId}`, { method: 'DELETE' })
+      const data = await res.json()
+      if (data.success) {
+        toast({ title: 'Cuenta desconectada', description: 'La cuenta ha sido desvinculada.' })
+        fetchAccounts()
+      } else {
+        toast({ title: 'Error', description: data.error || 'No se pudo desconectar.', variant: 'destructive' })
+      }
+    } catch {
+      toast({ title: 'Error de conexión', variant: 'destructive' })
+    } finally {
+      setDisconnectingId(null)
+    }
+  }
+
+  const fbAccounts = accounts.filter((a) => a.platform === 'facebook' && a.pageId)
+  const igAccounts = accounts.filter((a) => a.platform === 'instagram')
+  const personalFb = accounts.find((a) => a.platform === 'facebook' && !a.pageId)
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-rose-gold/10">
+          <Share2 className="h-5 w-5 text-rose-gold" />
+        </div>
+        <div>
+          <h3 className="text-lg font-semibold text-foreground">Redes Sociales</h3>
+          <p className="text-xs text-muted-foreground">Conecta tus cuentas de Facebook e Instagram para publicar automáticamente</p>
+        </div>
+      </div>
+
+      {/* Step 1: Meta App Configuration */}
+      <Card className="border-border/60">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <Key className="size-4 text-rose-gold" />
+            Paso 1: Configurar App de Meta
+          </CardTitle>
+          <CardDescription className="text-xs">
+            Necesitas crear una App en Meta for Developers para conectar tus cuentas.
+            <a href="https://developers.facebook.com/apps/" target="_blank" rel="noopener noreferrer" className="ml-1 text-rose-gold underline underline-offset-2 inline-flex items-center gap-0.5">
+              Crear App <ExternalLink className="h-3 w-3" />
+            </a>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="rounded-lg bg-champagne/20 border border-champagne/40 p-3">
+            <p className="text-xs text-foreground/80 leading-relaxed">
+              <strong>Instrucciones:</strong> Ve a Meta for Developers, crea una app de tipo "Business", agrega los productos
+              "Facebook Login" y "Instagram Basic Display", configura la URL de redirección como:{' '}
+              <code className="bg-muted px-1.5 py-0.5 rounded text-[11px] font-mono">
+                {typeof window !== 'undefined' ? `${window.location.origin}/api/social/meta/callback` : 'https://tudominio.com/api/social/meta/callback'}
+              </code>
+              , y copia el App ID y App Secret aquí.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label htmlFor="meta-app-id">App ID</Label>
+              <Input
+                id="meta-app-id"
+                placeholder="123456789012345"
+                value={appId}
+                onChange={(e) => setAppId(e.target.value)}
+                className="border-border/60 focus-visible:ring-rose-gold/30 font-mono text-sm"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="meta-app-secret">App Secret</Label>
+              <Input
+                id="meta-app-secret"
+                type="password"
+                placeholder="abcdef123456..."
+                value={appSecret}
+                onChange={(e) => setAppSecret(e.target.value)}
+                className="border-border/60 focus-visible:ring-rose-gold/30 font-mono text-sm"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <Button
+              onClick={handleSaveConfig}
+              disabled={isSavingConfig || !appId.trim() || !appSecret.trim()}
+              className="rose-gold-gradient text-white border-0 shadow-md shadow-rose-gold/20"
+            >
+              {isSavingConfig ? (
+                <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} className="inline-block size-4 rounded-full border-2 border-white/30 border-t-white" />
+              ) : (
+                <span className="flex items-center gap-2"><Save className="size-4" /> Guardar Configuración</span>
+              )}
+            </Button>
+            {metaConfig.configured && (
+              <Badge className="bg-emerald-100 text-emerald-700 border-0 text-xs">
+                Configurado
+              </Badge>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Step 2: Connect Accounts */}
+      <Card className="border-border/60">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <Link2 className="size-4 text-rose-gold" />
+            Paso 2: Conectar Cuentas
+          </CardTitle>
+          <CardDescription className="text-xs">
+            Inicia sesión con Facebook para vincular tus páginas e Instagram Business
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Button
+            onClick={() => handleConnect('both')}
+            disabled={!metaConfig.configured}
+            className="w-full sm:w-auto bg-[#1877F2] hover:bg-[#1877F2]/90 text-white border-0 shadow-md gap-2"
+          >
+            <Facebook className="h-4 w-4" />
+            Conectar con Facebook
+          </Button>
+
+          {!metaConfig.configured && (
+            <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+              <AlertCircle className="h-3.5 w-3.5 text-amber-500" />
+              Configura tu App de Meta primero para habilitar la conexión
+            </p>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Step 3: Connected Accounts */}
+      <Card className="border-border/60">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            Conectadas
+            {accounts.length > 0 && (
+              <Badge className="bg-rose-gold/10 text-rose-gold border-0 text-xs">{accounts.length}</Badge>
+            )}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} className="h-6 w-6 rounded-full border-2 border-rose-gold/30 border-t-rose-gold" />
+            </div>
+          ) : accounts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <Share2 className="h-10 w-10 text-muted-foreground/30 mb-3" />
+              <p className="text-sm text-muted-foreground">No hay cuentas conectadas</p>
+              <p className="text-xs text-muted-foreground/70">Conecta tu Facebook para vincular tus páginas e Instagram</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {/* Facebook Pages */}
+              {fbAccounts.length > 0 && (
+                <div className="space-y-2">
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                    <Facebook className="h-3.5 w-3.5" /> Páginas de Facebook
+                  </h4>
+                  {fbAccounts.map((account) => (
+                    <AccountCard key={account.id} account={account} onDisconnect={handleDisconnect} isDisconnecting={disconnectingId === account.id} />
+                  ))}
+                </div>
+              )}
+
+              {/* Instagram Accounts */}
+              {igAccounts.length > 0 && (
+                <div className="space-y-2">
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                    <Instagram className="h-3.5 w-3.5" /> Instagram Business
+                  </h4>
+                  {igAccounts.map((account) => (
+                    <AccountCard key={account.id} account={account} onDisconnect={handleDisconnect} isDisconnecting={disconnectingId === account.id} />
+                  ))}
+                </div>
+              )}
+
+              {/* Personal Facebook */}
+              {personalFb && (
+                <div className="space-y-2">
+                  <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-2">
+                    <Facebook className="h-3.5 w-3.5" /> Cuenta Personal
+                  </h4>
+                  <AccountCard account={personalFb} onDisconnect={handleDisconnect} isDisconnecting={disconnectingId === personalFb.id} />
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Info box */}
+      <div className="rounded-xl bg-muted/50 border border-border/60 p-4 space-y-2">
+        <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+          <AlertCircle className="h-4 w-4 text-amber-500" />
+          Requisitos para Instagram
+        </h4>
+        <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
+          <li>Tu cuenta de Instagram debe ser una <strong>cuenta Business o Creator</strong></li>
+          <li>La cuenta de Instagram debe estar vinculada a una Página de Facebook</li>
+          <li>La Meta App debe tener el producto "Instagram Graph API" agregado</li>
+          <li>Para producción, la App debe pasar la revisión de Meta (App Review)</li>
+          <li>En modo desarrollo, solo los testers de la App pueden usar las funciones de publicación</li>
+        </ul>
+      </div>
+    </div>
+  )
+}
+
+function AccountCard({ account, onDisconnect, isDisconnecting }: { account: SocialAccount; onDisconnect: (id: string) => void; isDisconnecting: boolean }) {
+  const PlatformIcon = account.platform === 'instagram' ? Instagram : Facebook
+
+  return (
+    <div className="flex items-center gap-3 rounded-lg border bg-card p-3 transition-all">
+      {/* Avatar */}
+      {account.accountPicture ? (
+        <img src={account.accountPicture} alt={account.accountName} className="h-10 w-10 rounded-full object-cover border-2 border-border" />
+      ) : (
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
+          <PlatformIcon className="h-5 w-5 text-muted-foreground" />
+        </div>
+      )}
+
+      {/* Info */}
+      <div className="flex-1 min-w-0">
+        <p className="text-sm font-medium text-foreground truncate">{account.accountName}</p>
+        <div className="flex items-center gap-2 mt-0.5">
+          <Badge className={cn(
+            'border-0 text-[10px] px-1.5 py-0',
+            account.platform === 'instagram' ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white' : 'bg-[#1877F2] text-white'
+          )}>
+            {account.platform === 'instagram' ? 'Instagram' : 'Facebook'}
+          </Badge>
+          {account.hasToken && (
+            <span className="text-[10px] text-emerald-600 flex items-center gap-0.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Conectada
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Disconnect button */}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => onDisconnect(account.id)}
+        disabled={isDisconnecting}
+        className="text-muted-foreground hover:text-destructive shrink-0 gap-1 text-xs"
+      >
+        {isDisconnecting ? (
+          <motion.span animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} className="h-3.5 w-3.5 rounded-full border-2 border-muted-foreground/30 border-t-muted-foreground" />
+        ) : (
+          <><Unlink className="h-3.5 w-3.5" /> Desconectar</>
+        )}
+      </Button>
+    </div>
+  )
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
 // MAIN ADMIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════════
 export default function Admin() {
@@ -934,9 +1304,9 @@ export default function Admin() {
         </Button>
       </motion.div>
 
-      {/* Tabs for Upload / Reorder */}
+      {/* Tabs */}
       <Tabs defaultValue="upload" className="space-y-6">
-        <TabsList className="bg-muted/50 p-1 h-auto">
+        <TabsList className="bg-muted/50 p-1 h-auto flex-wrap">
           <TabsTrigger value="upload" className="gap-2 text-sm px-4 py-2">
             <CloudUpload className="h-4 w-4" />
             Subir Piezas
@@ -944,6 +1314,10 @@ export default function Admin() {
           <TabsTrigger value="reorder" className="gap-2 text-sm px-4 py-2">
             <LayoutGrid className="h-4 w-4" />
             Ordenar Galería
+          </TabsTrigger>
+          <TabsTrigger value="social" className="gap-2 text-sm px-4 py-2">
+            <Share2 className="h-4 w-4" />
+            Redes Sociales
           </TabsTrigger>
         </TabsList>
 
@@ -953,6 +1327,10 @@ export default function Admin() {
 
         <TabsContent value="reorder">
           <ReorderGallery />
+        </TabsContent>
+
+        <TabsContent value="social">
+          <SocialAccounts />
         </TabsContent>
       </Tabs>
     </div>

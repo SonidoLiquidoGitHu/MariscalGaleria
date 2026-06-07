@@ -72,3 +72,27 @@ model Collection {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model SocialAccount {
+  id              String   @id @default(cuid())
+  platform        String   // "facebook" or "instagram"
+  accountId       String   // Platform-specific account ID
+  accountName     String   // Display name
+  accountPicture  String?  // Profile picture URL
+  accessToken     String   // Encrypted access token
+  tokenExpiresAt  DateTime?
+  pageId          String?  // Facebook Page ID (for IG business accounts too)
+  igBusinessId    String?  // Instagram Business Account ID
+  isConnected     Boolean  @default(true)
+  lastUsedAt      DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model MetaAppConfig {
+  id          String   @id @default(cuid())
+  appId       String
+  appSecret   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
