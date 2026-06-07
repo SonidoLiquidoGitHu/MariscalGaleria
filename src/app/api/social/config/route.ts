@@ -3,10 +3,25 @@ import { db } from '@/lib/db'
 
 /**
  * GET /api/social/config
- * Returns the current Meta App configuration (appId only, never the secret)
+ * Returns the current Meta App configuration
+ * Checks environment variables first, then falls back to database config
  */
 export async function GET() {
   try {
+    // Priority 1: Check environment variables
+    const envAppId = process.env.META_APP_ID
+    const envAppSecret = process.env.META_APP_SECRET
+
+    if (envAppId && envAppSecret) {
+      return NextResponse.json({
+        configured: true,
+        appId: envAppId,
+        appSecretSet: true,
+        source: 'environment',
+      })
+    }
+
+    // Priority 2: Check database config
     const config = await db.metaAppConfig.findFirst()
     if (!config) {
       return NextResponse.json({ configured: false })
@@ -15,6 +30,7 @@ export async function GET() {
       configured: true,
       appId: config.appId,
       appSecretSet: !!config.appSecret,
+      source: 'database',
     })
   } catch {
     return NextResponse.json({ configured: false })
@@ -23,7 +39,7 @@ export async function GET() {
 
 /**
  * POST /api/social/config
- * Saves or updates the Meta App configuration
+ * Saves or updates the Meta App configuration (fallback for non-env-var setups)
  * Body: { appId: string, appSecret: string }
  */
 export async function POST(req: NextRequest) {

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { db } from '@/lib/db'
 
 /**
  * GET /api/social/meta/login
@@ -8,11 +9,18 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const platform = searchParams.get('platform') || 'facebook'
 
-  const appId = process.env.META_APP_ID
+  // Get App ID — check env vars first, then database
+  let appId = process.env.META_APP_ID
+  if (!appId) {
+    try {
+      const config = await db.metaAppConfig.findFirst()
+      if (config) appId = config.appId
+    } catch {}
+  }
 
   if (!appId) {
     return NextResponse.json(
-      { error: 'META_APP_ID no configurado. Ve a Admin → Redes Sociales para configurar tu App de Meta.' },
+      { error: 'META_APP_ID no configurado. Agrega las variables de entorno META_APP_ID y META_APP_SECRET en Netlify, o configura la app en Admin → Redes Sociales.' },
       { status: 400 }
     )
   }

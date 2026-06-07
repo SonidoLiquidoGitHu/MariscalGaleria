@@ -31,11 +31,22 @@ export async function GET(req: NextRequest) {
     return NextResponse.redirect(new URL('/admin?social_error=Estado+invalido', req.url).toString())
   }
 
-  const appId = process.env.META_APP_ID
-  const appSecret = process.env.META_APP_SECRET
+  // Get App ID and Secret — check env vars first, then database
+  let appId = process.env.META_APP_ID
+  let appSecret = process.env.META_APP_SECRET
 
   if (!appId || !appSecret) {
-    return NextResponse.redirect(new URL('/admin?social_error=App+de+Meta+no+configurada', req.url).toString())
+    try {
+      const config = await db.metaAppConfig.findFirst()
+      if (config) {
+        appId = appId || config.appId
+        appSecret = appSecret || config.appSecret
+      }
+    } catch {}
+  }
+
+  if (!appId || !appSecret) {
+    return NextResponse.redirect(new URL('/admin?social_error=App+de+Meta+no+configurada.+Agrega+META_APP_ID+y+META_APP_SECRET+en+las+variables+de+entorno.', req.url).toString())
   }
 
   const host = req.headers.get('host') || 'localhost:3000'
