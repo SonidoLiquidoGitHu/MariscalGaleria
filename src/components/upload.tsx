@@ -196,6 +196,7 @@ export default function Upload() {
             media: files.map((f) => f.url),
             videoUrl: formData.videoUrl.trim() || undefined,
             createdAt: new Date().toISOString(),
+            sortOrder: 0,
           }
 
           addProduct(product)

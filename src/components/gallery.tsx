@@ -286,14 +286,16 @@ export default function Gallery() {
 
   // Filter products
   const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
-      const matchesCategory =
-        selectedCategory === 'all' || p.category === selectedCategory
-      const matchesSearch =
-        searchQuery.trim() === '' ||
-        p.name.toLowerCase().includes(searchQuery.toLowerCase())
-      return matchesCategory && matchesSearch && p.isActive
-    })
+    return products
+      .filter((p) => {
+        const matchesCategory =
+          selectedCategory === 'all' || p.category === selectedCategory
+        const matchesSearch =
+          searchQuery.trim() === '' ||
+          p.name.toLowerCase().includes(searchQuery.toLowerCase())
+        return matchesCategory && matchesSearch && p.isActive
+      })
+      .sort((a, b) => (a.sortOrder ?? 999) - (b.sortOrder ?? 999))
   }, [products, selectedCategory, searchQuery])
 
   const featuredProducts = useMemo(() => {

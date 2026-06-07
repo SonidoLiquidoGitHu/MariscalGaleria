@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 
-export type Section = 'gallery' | 'upload' | 'schedule' | 'calendar' | 'analytics' | 'hashtags' | 'ai-studio'
+export type Section = 'gallery' | 'upload' | 'schedule' | 'calendar' | 'analytics' | 'hashtags' | 'ai-studio' | 'admin'
 
 export interface Product {
   id: string
@@ -14,6 +14,7 @@ export interface Product {
   media: string[]
   videoUrl?: string
   createdAt: string
+  sortOrder: number
 }
 
 export interface ScheduledPost {
@@ -56,6 +57,7 @@ interface AppState {
   analytics: AnalyticsData[]
   selectedCategory: string
   searchQuery: string
+  isAdminAuthenticated: boolean
 
   setActiveSection: (section: Section) => void
   toggleSidebar: () => void
@@ -63,6 +65,7 @@ interface AppState {
   addProduct: (product: Product) => void
   updateProduct: (id: string, product: Partial<Product>) => void
   deleteProduct: (id: string) => void
+  reorderProducts: (products: Product[]) => void
   setScheduledPosts: (posts: ScheduledPost[]) => void
   addScheduledPost: (post: ScheduledPost) => void
   updateScheduledPost: (id: string, post: Partial<ScheduledPost>) => void
@@ -73,7 +76,12 @@ interface AppState {
   setAnalytics: (data: AnalyticsData[]) => void
   setSelectedCategory: (category: string) => void
   setSearchQuery: (query: string) => void
+  loginAdmin: (username: string, password: string) => boolean
+  logoutAdmin: () => void
 }
+
+const ADMIN_USERNAME = 'MariscalGaleria'
+const ADMIN_PASSWORD = 'Losgallos03'
 
 export const useAppStore = create<AppState>((set) => ({
   activeSection: 'gallery',
@@ -84,6 +92,7 @@ export const useAppStore = create<AppState>((set) => ({
   analytics: [],
   selectedCategory: 'all',
   searchQuery: '',
+  isAdminAuthenticated: false,
 
   setActiveSection: (section) => set({ activeSection: section }),
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
@@ -95,6 +104,7 @@ export const useAppStore = create<AppState>((set) => ({
   deleteProduct: (id) => set((state) => ({
     products: state.products.filter((p) => p.id !== id),
   })),
+  reorderProducts: (products) => set({ products }),
   setScheduledPosts: (posts) => set({ scheduledPosts: posts }),
   addScheduledPost: (post) => set((state) => ({ scheduledPosts: [...state.scheduledPosts, post] })),
   updateScheduledPost: (id, updates) => set((state) => ({
@@ -111,4 +121,12 @@ export const useAppStore = create<AppState>((set) => ({
   setAnalytics: (data) => set({ analytics: data }),
   setSelectedCategory: (category) => set({ selectedCategory: category }),
   setSearchQuery: (query) => set({ searchQuery: query }),
+  loginAdmin: (username, password) => {
+    if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+      set({ isAdminAuthenticated: true })
+      return true
+    }
+    return false
+  },
+  logoutAdmin: () => set({ isAdminAuthenticated: false }),
 }))

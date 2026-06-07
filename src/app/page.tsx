@@ -14,6 +14,7 @@ import CalendarView from '@/components/calendar-view'
 import Analytics from '@/components/analytics'
 import Hashtags from '@/components/hashtags'
 import AIStudio from '@/components/ai-studio'
+import Admin from '@/components/admin'
 
 const sectionComponents: Record<Section, React.ComponentType> = {
   gallery: Gallery,
@@ -23,6 +24,7 @@ const sectionComponents: Record<Section, React.ComponentType> = {
   analytics: Analytics,
   hashtags: Hashtags,
   'ai-studio': AIStudio,
+  admin: Admin,
 }
 
 function AppContent() {

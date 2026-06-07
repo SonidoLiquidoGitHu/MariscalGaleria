@@ -11,6 +11,7 @@ import {
   BarChart3,
   Hash,
   Sparkles,
+  Shield,
   Sun,
   Moon,
   PanelLeftClose,
@@ -42,6 +43,7 @@ const navItems: { id: Section; label: string; icon: React.ElementType }[] = [
   { id: 'analytics', label: 'Analíticas', icon: BarChart3 },
   { id: 'hashtags', label: 'Hashtags', icon: Hash },
   { id: 'ai-studio', label: 'Estudio IA', icon: Sparkles },
+  { id: 'admin', label: 'Admin', icon: Shield },
 ]
 
 // ─── Sidebar widths ──────────────────────────────────────────────────────────

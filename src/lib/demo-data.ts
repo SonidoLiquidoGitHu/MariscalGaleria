@@ -25,6 +25,7 @@ export const DEMO_PRODUCTS: Product[] = [
     isActive: true,
     media: [SILVER_JEWELRY_IMAGES[0]],
     createdAt: new Date().toISOString(),
+    sortOrder: 0,
   },
   {
     id: 'demo-2',
@@ -37,6 +38,7 @@ export const DEMO_PRODUCTS: Product[] = [
     isActive: true,
     media: [SILVER_JEWELRY_IMAGES[1]],
     createdAt: new Date().toISOString(),
+    sortOrder: 1,
   },
   {
     id: 'demo-3',
@@ -49,6 +51,7 @@ export const DEMO_PRODUCTS: Product[] = [
     isActive: true,
     media: [SILVER_JEWELRY_IMAGES[2]],
     createdAt: new Date().toISOString(),
+    sortOrder: 2,
   },
   {
     id: 'demo-4',
@@ -61,6 +64,7 @@ export const DEMO_PRODUCTS: Product[] = [
     isActive: true,
     media: [SILVER_JEWELRY_IMAGES[3]],
     createdAt: new Date().toISOString(),
+    sortOrder: 3,
   },
   {
     id: 'demo-5',
@@ -73,6 +77,7 @@ export const DEMO_PRODUCTS: Product[] = [
     isActive: true,
     media: [SILVER_JEWELRY_IMAGES[4]],
     createdAt: new Date().toISOString(),
+    sortOrder: 4,
   },
   {
     id: 'demo-6',
@@ -85,6 +90,7 @@ export const DEMO_PRODUCTS: Product[] = [
     isActive: true,
     media: [SILVER_JEWELRY_IMAGES[5]],
     createdAt: new Date().toISOString(),
+    sortOrder: 5,
   },
   {
     id: 'demo-7',
@@ -97,6 +103,7 @@ export const DEMO_PRODUCTS: Product[] = [
     isActive: true,
     media: [SILVER_JEWELRY_IMAGES[6]],
     createdAt: new Date().toISOString(),
+    sortOrder: 6,
   },
   {
     id: 'demo-8',
@@ -109,6 +116,7 @@ export const DEMO_PRODUCTS: Product[] = [
     isActive: true,
     media: [SILVER_JEWELRY_IMAGES[7]],
     createdAt: new Date().toISOString(),
+    sortOrder: 7,
   },
 ]
 
