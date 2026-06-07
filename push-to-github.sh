@@ -54,6 +54,12 @@ fi
 
 # ─── Push ───────────────────────────────────────────────────────────────────
 echo "🚀 Subiendo a GitHub..."
+
+# Use paramiko SSH wrapper if native ssh is not available
+if ! command -v ssh &> /dev/null; then
+  export GIT_SSH_COMMAND="$HOME/.local/bin/git-ssh-wrapper"
+fi
+
 if git push -u "$PUSH_URL" "$BRANCH"; then
   echo ""
   echo "╔══════════════════════════════════════════════════════════╗"
