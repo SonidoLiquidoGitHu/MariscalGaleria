@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search,
@@ -17,7 +17,7 @@ import {
   Palette,
 } from 'lucide-react'
 import { useAppStore, type Product, type Discipline } from '@/lib/store'
-import { DEMO_PRODUCTS, DISCIPLINES, CATEGORIES_BY_DISCIPLINE } from '@/lib/demo-data'
+import { DISCIPLINES, CATEGORIES_BY_DISCIPLINE } from '@/lib/demo-data'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -290,19 +290,14 @@ export default function Gallery() {
     setSelectedDiscipline,
     searchQuery,
     setSearchQuery,
-    setProducts,
     deleteProduct,
   } = useAppStore()
 
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
 
-  // Initialize with demo data if store is empty
-  useEffect(() => {
-    if (products.length === 0) {
-      setProducts(DEMO_PRODUCTS)
-    }
-  }, [])
+  // Products are loaded by AppContent in page.tsx — no need to initialize here
+  // The gallery just reads from the store
 
   // Current categories based on discipline
   const currentCategories = CATEGORIES_BY_DISCIPLINE[selectedDiscipline]

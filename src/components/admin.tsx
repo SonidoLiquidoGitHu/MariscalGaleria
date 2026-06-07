@@ -487,10 +487,10 @@ function AdminUpload() {
     if (fileInputRef.current) fileInputRef.current.value = ''
   }, [processFiles])
 
-  // Submit
-  const handleSubmit = useCallback(() => {
+  // Submit: Upload files to server, then save product
+  const handleSubmit = useCallback(async () => {
     if (!formData.name.trim()) {
-      toast({ title: 'Información faltante', description: 'Por favor ingresa el nombre del producto.', variant: 'destructive' })
+      toast({ title: 'Información faltante', description: 'Por favor ingresa el nombre de la obra.', variant: 'destructive' })
       return
     }
     if (!formData.category) {
@@ -501,53 +501,93 @@ function AdminUpload() {
     setIsUploading(true)
     setProgress(0)
 
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          return 100
+    try {
+      // Step 1: Upload files to server
+      let mediaUrls: string[] = []
+      if (files.length > 0) {
+        setProgress(10)
+        const uploadFormData = new FormData()
+        files.forEach((f) => {
+          uploadFormData.append('files', f.file)
+        })
+
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        })
+
+        const uploadData = await uploadRes.json()
+        if (!uploadRes.ok || !uploadData.success) {
+          throw new Error(uploadData.error || 'Error al subir archivos')
         }
-        const increment = prev < 30 ? 5 : prev < 70 ? 3 : prev < 90 ? 4 : 2
-        return Math.min(prev + increment, 100)
+
+        mediaUrls = uploadData.urls
+        setProgress(60)
+      }
+
+      setProgress(75)
+
+      // Step 2: Build tagline and description
+      const tagline = adminDiscipline === 'joyeria' ? TAGLINE_JEWELRY : TAGLINE_GENERAL
+      const desc = formData.description.trim()
+        ? `${formData.description.trim()} — ${tagline}`
+        : tagline
+
+      // Step 3: Save product to database via API
+      const productPayload = {
+        name: formData.name.trim(),
+        description: desc,
+        price: formData.price ? parseFloat(formData.price) : undefined,
+        category: formData.category,
+        discipline: adminDiscipline,
+        sku: formData.sku.trim() || undefined,
+        isFeatured: formData.isFeatured,
+        isActive: formData.isActive,
+        media: mediaUrls,
+        videoUrl: formData.videoUrl.trim() || undefined,
+      }
+
+      const productRes = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productPayload),
       })
-    }, 120)
 
-    const checkDone = setInterval(() => {
-      setProgress((current) => {
-        if (current >= 100) {
-          clearInterval(checkDone)
+      const productData = await productRes.json()
+      if (!productRes.ok) {
+        throw new Error(productData.error || 'Error al guardar la obra')
+      }
 
-          const tagline = adminDiscipline === 'joyeria' ? TAGLINE_JEWELRY : TAGLINE_GENERAL
-          const desc = formData.description.trim()
-            ? `${formData.description.trim()} — ${tagline}`
-            : tagline
+      setProgress(100)
 
-          const product: Product = {
-            id: Date.now().toString(),
-            name: formData.name.trim(),
-            description: desc,
-            price: formData.price ? parseFloat(formData.price) : undefined,
-            category: formData.category,
-            discipline: adminDiscipline,
-            sku: formData.sku.trim() || undefined,
-            isFeatured: formData.isFeatured,
-            isActive: formData.isActive,
-            media: files.map((f) => f.url),
-            videoUrl: formData.videoUrl.trim() || undefined,
-            createdAt: new Date().toISOString(),
-            sortOrder: products.length,
-          }
+      // Step 4: Add to Zustand store for immediate UI update
+      const savedProduct: Product = {
+        id: productData.product.id,
+        name: formData.name.trim(),
+        description: desc,
+        price: formData.price ? parseFloat(formData.price) : undefined,
+        category: formData.category,
+        discipline: adminDiscipline,
+        sku: formData.sku.trim() || undefined,
+        isFeatured: formData.isFeatured,
+        isActive: formData.isActive,
+        media: mediaUrls,
+        videoUrl: formData.videoUrl.trim() || undefined,
+        createdAt: new Date().toISOString(),
+        sortOrder: products.length,
+      }
 
-          addProduct(product)
-          toast({ title: 'Colección actualizada', description: `"${formData.name}" ha sido agregada a la galería.` })
-          setIsUploading(false)
-          clearForm()
-          return 0
-        }
-        return current
-      })
-    }, 150)
-  }, [formData, files, addProduct, toast, clearForm, products.length])
+      addProduct(savedProduct)
+      toast({ title: 'Colección actualizada', description: `"${formData.name}" ha sido agregada a la galería.` })
+      setIsUploading(false)
+      clearForm()
+    } catch (err: any) {
+      console.error('Upload submit error:', err)
+      toast({ title: 'Error al subir', description: err.message || 'No se pudo completar la subida.', variant: 'destructive' })
+      setIsUploading(false)
+      setProgress(0)
+    }
+  }, [formData, files, adminDiscipline, addProduct, toast, clearForm, products.length])
 
   return (
     <div className="space-y-6">

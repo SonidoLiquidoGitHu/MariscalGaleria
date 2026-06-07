@@ -9,6 +9,7 @@ import {
   Video,
   ImageIcon,
   Sparkles,
+  AlertCircle,
 } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -56,6 +57,7 @@ export default function Upload() {
   const [isDragging, setIsDragging] = useState(false)
   const [progress, setProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
+  const [uploadError, setUploadError] = useState('')
 
   const [selectedUploadDiscipline, setSelectedUploadDiscipline] = useState<Discipline>('joyeria')
   const [formData, setFormData] = useState({
@@ -104,6 +106,7 @@ export default function Upload() {
       videoUrl: '',
     })
     setProgress(0)
+    setUploadError('')
   }, [files])
 
   const currentUploadCategories = CATEGORIES_BY_DISCIPLINE[selectedUploadDiscipline].filter(c => c.value !== 'all')
@@ -142,96 +145,132 @@ export default function Upload() {
     [processFiles]
   )
 
-  // --- Submit ---
-  const handleSubmit = useCallback(() => {
+  // --- Submit: Upload files to server, then save product ---
+  const handleSubmit = useCallback(async () => {
     if (!formData.name.trim()) {
-      toast({
-        title: 'Información faltante',
-        description: 'Por favor ingresa el nombre del producto.',
-        variant: 'destructive',
-      })
+      toast({ title: 'Información faltante', description: 'Por favor ingresa el nombre de la obra.', variant: 'destructive' })
       return
     }
     if (!formData.category) {
-      toast({
-        title: 'Información faltante',
-        description: 'Por favor selecciona una categoría.',
-        variant: 'destructive',
-      })
+      toast({ title: 'Información faltante', description: 'Por favor selecciona una categoría.', variant: 'destructive' })
       return
     }
 
     setIsUploading(true)
     setProgress(0)
+    setUploadError('')
 
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval)
-          return 100
+    try {
+      // Step 1: Upload files to server
+      let mediaUrls: string[] = []
+      if (files.length > 0) {
+        setProgress(10)
+        const uploadFormData = new FormData()
+        files.forEach((f) => {
+          uploadFormData.append('files', f.file)
+        })
+
+        const uploadRes = await fetch('/api/upload', {
+          method: 'POST',
+          body: uploadFormData,
+        })
+
+        const uploadData = await uploadRes.json()
+
+        if (!uploadRes.ok || !uploadData.success) {
+          throw new Error(uploadData.error || 'Error al subir archivos')
         }
-        // Simulate variable speed
-        const increment = prev < 30 ? 5 : prev < 70 ? 3 : prev < 90 ? 4 : 2
-        return Math.min(prev + increment, 100)
+
+        mediaUrls = uploadData.urls
+        setProgress(60)
+      }
+
+      setProgress(75)
+
+      // Step 2: Build the tagline and description
+      const tagline = selectedUploadDiscipline === 'joyeria' ? TAGLINE_JEWELRY : TAGLINE_GENERAL
+      const desc = formData.description.trim()
+        ? `${formData.description.trim()} — ${tagline}`
+        : tagline
+
+      // Step 3: Save product to database via API
+      const productPayload = {
+        name: formData.name.trim(),
+        description: desc,
+        price: formData.price ? parseFloat(formData.price) : undefined,
+        category: formData.category,
+        discipline: selectedUploadDiscipline,
+        sku: formData.sku.trim() || undefined,
+        isFeatured: formData.isFeatured,
+        isActive: true,
+        media: mediaUrls,
+        videoUrl: formData.videoUrl.trim() || undefined,
+      }
+
+      const productRes = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productPayload),
       })
-    }, 120)
 
-    // Wait for "upload" to finish
-    const checkDone = setInterval(() => {
-      setProgress((current) => {
-        if (current >= 100) {
-          clearInterval(checkDone)
+      const productData = await productRes.json()
 
-          const tagline = selectedUploadDiscipline === 'joyeria' ? TAGLINE_JEWELRY : TAGLINE_GENERAL
-          const desc = formData.description.trim()
-            ? `${formData.description.trim()} — ${tagline}`
-            : tagline
+      if (!productRes.ok) {
+        throw new Error(productData.error || 'Error al guardar la obra')
+      }
 
-          const product: Product = {
-            id: Date.now().toString(),
-            name: formData.name.trim(),
-            description: desc,
-            price: formData.price ? parseFloat(formData.price) : undefined,
-            category: formData.category,
-            discipline: selectedUploadDiscipline,
-            sku: formData.sku.trim() || undefined,
-            isFeatured: formData.isFeatured,
-            isActive: true,
-            media: files.map((f) => f.url),
-            videoUrl: formData.videoUrl.trim() || undefined,
-            createdAt: new Date().toISOString(),
-            sortOrder: 0,
-          }
+      setProgress(100)
 
-          addProduct(product)
+      // Step 4: Add to Zustand store for immediate UI update
+      const savedProduct: Product = {
+        id: productData.product.id,
+        name: formData.name.trim(),
+        description: desc,
+        price: formData.price ? parseFloat(formData.price) : undefined,
+        category: formData.category,
+        discipline: selectedUploadDiscipline,
+        sku: formData.sku.trim() || undefined,
+        isFeatured: formData.isFeatured,
+        isActive: true,
+        media: mediaUrls,
+        videoUrl: formData.videoUrl.trim() || undefined,
+        createdAt: new Date().toISOString(),
+        sortOrder: 0,
+      }
 
-          toast({
-            title: '✨ Colección actualizada',
-            description: `"${formData.name}" ha sido agregada a tu galería de plata.`,
-          })
+      addProduct(savedProduct)
 
-          setIsUploading(false)
-
-          // Clean up object URLs and reset
-          files.forEach((f) => URL.revokeObjectURL(f.url))
-          setFiles([])
-          setFormData({
-            name: '',
-            description: '',
-            price: '',
-            category: '',
-            sku: '',
-            isFeatured: false,
-            videoUrl: '',
-          })
-          setProgress(0)
-
-          return 0
-        }
-        return current
+      toast({
+        title: 'Colección actualizada',
+        description: `"${formData.name}" ha sido agregada a la galería.`,
       })
-    }, 150)
-  }, [formData, files, addProduct, toast])
+
+      // Clean up
+      files.forEach((f) => URL.revokeObjectURL(f.url))
+      setFiles([])
+      setFormData({
+        name: '',
+        description: '',
+        price: '',
+        category: '',
+        sku: '',
+        isFeatured: false,
+        videoUrl: '',
+      })
+      setProgress(0)
+
+    } catch (err: any) {
+      console.error('Upload submit error:', err)
+      setUploadError(err.message || 'Error desconocido al subir')
+      toast({
+        title: 'Error al subir',
+        description: err.message || 'No se pudo completar la subida. Intenta de nuevo.',
+        variant: 'destructive',
+      })
+    } finally {
+      setIsUploading(false)
+    }
+  }, [formData, files, selectedUploadDiscipline, addProduct, toast])
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-8 p-4 sm:p-6 lg:p-8">
@@ -293,7 +332,7 @@ export default function Upload() {
               </span>
             </p>
             <p className="mt-1 text-xs text-muted-foreground/70">
-              JPG, PNG, WebP, MP4, MOV
+              JPG, PNG, WebP, MP4, MOV — Se guardarán en el servidor
             </p>
 
             <input
@@ -360,40 +399,24 @@ export default function Upload() {
                     }}
                   >
                     <Card className="group relative overflow-hidden border border-border/60 transition-shadow hover:shadow-md">
-                      {/* Thumbnail */}
                       <div className="relative aspect-square bg-muted">
                         {f.type === 'image' ? (
-                          <img
-                            src={f.url}
-                            alt={f.name}
-                            className="h-full w-full object-cover"
-                          />
+                          <img src={f.url} alt={f.name} className="h-full w-full object-cover" />
                         ) : (
                           <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-gradient-to-br from-foreground/5 to-foreground/10">
                             <Video className="size-8 text-rose-gold/70" />
                             <Play className="size-5 text-rose-gold" />
                           </div>
                         )}
-
-                        {/* VIDEO badge */}
                         {f.type === 'video' && (
-                          <Badge className="absolute left-2 top-2 bg-rose-gold text-white border-none text-[10px] px-1.5 py-0">
-                            VIDEO
-                          </Badge>
+                          <Badge className="absolute left-2 top-2 bg-rose-gold text-white border-none text-[10px] px-1.5 py-0">VIDEO</Badge>
                         )}
-
-                        {/* Remove button */}
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            removeFile(f.id)
-                          }}
+                          onClick={(e) => { e.stopPropagation(); removeFile(f.id) }}
                           className="absolute right-1.5 top-1.5 flex size-6 items-center justify-center rounded-full bg-black/50 text-white opacity-0 backdrop-blur-sm transition-opacity group-hover:opacity-100 hover:bg-destructive"
                         >
                           <X className="size-3.5" />
                         </button>
-
-                        {/* Play overlay for video */}
                         {f.type === 'video' && (
                           <div className="absolute inset-0 flex items-center justify-center">
                             <div className="flex size-10 items-center justify-center rounded-full bg-black/30 backdrop-blur-sm">
@@ -402,15 +425,9 @@ export default function Upload() {
                           </div>
                         )}
                       </div>
-
-                      {/* Info */}
                       <div className="p-2">
-                        <p className="truncate text-xs font-medium text-foreground">
-                          {f.name}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground">
-                          {f.size}
-                        </p>
+                        <p className="truncate text-xs font-medium text-foreground">{f.name}</p>
+                        <p className="text-[10px] text-muted-foreground">{f.size}</p>
                       </div>
                     </Card>
                   </motion.div>
@@ -440,15 +457,13 @@ export default function Upload() {
               {/* Name */}
               <div className="space-y-1.5 sm:col-span-2">
                 <Label htmlFor="product-name">
-                  Nombre del Producto <span className="text-destructive">*</span>
+                  Nombre de la Obra <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="product-name"
                   placeholder="ej. Anillo Luna Celestial"
                   value={formData.name}
-                  onChange={(e) =>
-                    setFormData((p) => ({ ...p, name: e.target.value }))
-                  }
+                  onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))}
                   className="border-border/60 focus-visible:ring-rose-gold/30"
                 />
               </div>
@@ -461,31 +476,12 @@ export default function Upload() {
                   placeholder="Describe la artesanía, los materiales y la inspiración..."
                   rows={3}
                   value={formData.description}
-                  onChange={(e) =>
-                    setFormData((p) => ({ ...p, description: e.target.value }))
-                  }
+                  onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))}
                   className="resize-none border-border/60 focus-visible:ring-rose-gold/30"
                 />
               </div>
 
-              {/* Price */}
-              <div className="space-y-1.5">
-                <Label htmlFor="product-price">Precio ($)</Label>
-                <Input
-                  id="product-price"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="0.00"
-                  value={formData.price}
-                  onChange={(e) =>
-                    setFormData((p) => ({ ...p, price: e.target.value }))
-                  }
-                  className="border-border/60 focus-visible:ring-rose-gold/30"
-                />
-              </div>
-
-              {/* Discipline */}
+              {/* Discipline selector */}
               <div className="space-y-1.5 sm:col-span-2">
                 <Label>Disciplina <span className="text-destructive">*</span></Label>
                 <div className="flex gap-2 flex-wrap">
@@ -509,6 +505,21 @@ export default function Upload() {
                 </div>
               </div>
 
+              {/* Price */}
+              <div className="space-y-1.5">
+                <Label htmlFor="product-price">Precio ($)</Label>
+                <Input
+                  id="product-price"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={formData.price}
+                  onChange={(e) => setFormData((p) => ({ ...p, price: e.target.value }))}
+                  className="border-border/60 focus-visible:ring-rose-gold/30"
+                />
+              </div>
+
               {/* Category */}
               <div className="space-y-1.5">
                 <Label>
@@ -516,9 +527,7 @@ export default function Upload() {
                 </Label>
                 <Select
                   value={formData.category}
-                  onValueChange={(v) =>
-                    setFormData((p) => ({ ...p, category: v }))
-                  }
+                  onValueChange={(v) => setFormData((p) => ({ ...p, category: v }))}
                 >
                   <SelectTrigger className="w-full border-border/60 focus:ring-rose-gold/30">
                     <SelectValue placeholder="Selecciona categoría" />
@@ -540,9 +549,7 @@ export default function Upload() {
                   id="product-sku"
                   placeholder="e.g. SR-925-R001"
                   value={formData.sku}
-                  onChange={(e) =>
-                    setFormData((p) => ({ ...p, sku: e.target.value }))
-                  }
+                  onChange={(e) => setFormData((p) => ({ ...p, sku: e.target.value }))}
                   className="border-border/60 focus-visible:ring-rose-gold/30"
                 />
               </div>
@@ -554,9 +561,7 @@ export default function Upload() {
                   id="video-url"
                   placeholder="https://..."
                   value={formData.videoUrl}
-                  onChange={(e) =>
-                    setFormData((p) => ({ ...p, videoUrl: e.target.value }))
-                  }
+                  onChange={(e) => setFormData((p) => ({ ...p, videoUrl: e.target.value }))}
                   className="border-border/60 focus-visible:ring-rose-gold/30"
                 />
               </div>
@@ -565,9 +570,7 @@ export default function Upload() {
               <div className="flex items-center gap-3 sm:col-span-2">
                 <Switch
                   checked={formData.isFeatured}
-                  onCheckedChange={(v) =>
-                    setFormData((p) => ({ ...p, isFeatured: v }))
-                  }
+                  onCheckedChange={(v) => setFormData((p) => ({ ...p, isFeatured: v }))}
                   className="data-[state=checked]:bg-rose-gold"
                 />
                 <Label className="cursor-pointer">Marcar como Destacada</Label>
@@ -579,7 +582,7 @@ export default function Upload() {
 
       {/* ── Progress ── */}
       <AnimatePresence>
-        {isUploading && (
+        {(isUploading || progress > 0) && (
           <motion.div
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -587,15 +590,30 @@ export default function Upload() {
             className="space-y-2"
           >
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Subiendo...</span>
-              <span className="font-medium text-rose-gold">
-                {progress}%
+              <span className="text-muted-foreground">
+                {progress < 60 ? 'Subiendo archivos...' : progress < 90 ? 'Guardando obra...' : 'Completado'}
               </span>
+              <span className="font-medium text-rose-gold">{progress}%</span>
             </div>
             <Progress
               value={progress}
               className="h-2 bg-rose-gold/10 [&>[data-slot=progress-indicator]]:bg-rose-gold"
             />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── Error message ── */}
+      <AnimatePresence>
+        {uploadError && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="rounded-lg bg-red-50 border border-red-200 p-3 flex items-start gap-2"
+          >
+            <AlertCircle className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
+            <p className="text-sm text-red-600">{uploadError}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -617,7 +635,7 @@ export default function Upload() {
         </Button>
         <Button
           onClick={handleSubmit}
-          disabled={isUploading}
+          disabled={isUploading || !formData.name.trim() || !formData.category}
           className="rose-gold-gradient text-white border-0 shadow-lg shadow-rose-gold/20 hover:shadow-rose-gold/40 transition-shadow"
         >
           {isUploading ? (

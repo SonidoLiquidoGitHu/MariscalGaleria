@@ -1,10 +1,10 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ThemeProvider } from 'next-themes'
 import { TooltipProvider } from '@/components/ui/tooltip'
-import { useAppStore, type Section } from '@/lib/store'
+import { useAppStore, type Section, type Product } from '@/lib/store'
 import { DEMO_PRODUCTS, DEMO_HASHTAGS, DEMO_ANALYTICS } from '@/lib/demo-data'
 import Sidebar from '@/components/sidebar'
 import Gallery from '@/components/gallery'
@@ -28,14 +28,55 @@ const sectionComponents: Record<Section, React.ComponentType> = {
 }
 
 function AppContent() {
-  const { activeSection, products, setProducts, hashtagSets, setHashtagSets, analytics, setAnalytics, scheduledPosts, setScheduledPosts } = useAppStore()
+  const { activeSection, products, setProducts, hashtagSets, setHashtagSets, analytics, setAnalytics } = useAppStore()
+  const [loaded, setLoaded] = useState(false)
 
-  // Initialize demo data
+  // Load products from database on mount, merge with demo data
   useEffect(() => {
-    if (products.length === 0) setProducts(DEMO_PRODUCTS)
-    if (hashtagSets.length === 0) setHashtagSets(DEMO_HASHTAGS)
-    if (analytics.length === 0) setAnalytics(DEMO_ANALYTICS)
-  }, [])
+    async function loadData() {
+      try {
+        // Fetch saved products from database
+        const res = await fetch('/api/products')
+        const data = await res.json()
+        const dbProducts: Product[] = (data.products || []).map((p: any) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description || undefined,
+          price: p.price || undefined,
+          category: p.category || 'anillos',
+          discipline: p.discipline || 'joyeria',
+          sku: p.sku || undefined,
+          isFeatured: p.isFeatured || false,
+          isActive: p.isActive !== false,
+          media: Array.isArray(p.media) ? p.media : [],
+          videoUrl: p.videoUrl || undefined,
+          createdAt: p.createdAt ? new Date(p.createdAt).toISOString() : new Date().toISOString(),
+          sortOrder: 0,
+        }))
+
+        if (dbProducts.length > 0) {
+          // Merge: database products take priority, fill gaps with demo data
+          const dbIds = new Set(dbProducts.map((p: Product) => p.id))
+          const demoExtras = DEMO_PRODUCTS.filter((p) => !dbIds.has(p.id))
+          setProducts([...dbProducts, ...demoExtras])
+        } else {
+          // No DB products yet — use demo data
+          setProducts(DEMO_PRODUCTS)
+        }
+      } catch (err) {
+        console.error('Failed to load products from DB, using demo data:', err)
+        if (products.length === 0) setProducts(DEMO_PRODUCTS)
+      }
+
+      // Load hashtags and analytics (demo for now)
+      if (hashtagSets.length === 0) setHashtagSets(DEMO_HASHTAGS)
+      if (analytics.length === 0) setAnalytics(DEMO_ANALYTICS)
+
+      setLoaded(true)
+    }
+
+    if (!loaded) loadData()
+  }, [loaded])
 
   const ActiveSection = sectionComponents[activeSection]
 

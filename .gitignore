@@ -62,3 +62,6 @@ download/
 upload/
 db/
 Caddyfile
+
+# User uploaded files (not source code)
+public/uploads/
