@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Float?
+  category    String   @default("rings")
+  sku         String?
+  isFeatured  Boolean  @default(false)
+  isActive    Boolean  @default(true)
+  media       String?  // JSON string of media URLs
+  videoUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ScheduledPost {
+  id            String   @id @default(cuid())
+  caption       String
+  platform      String   @default("instagram") // instagram, facebook, both
+  media         String?  // JSON string of media URLs
+  scheduledAt   DateTime
+  publishedAt   DateTime?
+  status        String   @default("draft") // draft, scheduled, published, failed
+  isRecurring   Boolean  @default(false)
+  recurrence    String?  // daily, weekly, monthly
+  hashtags      String?  // JSON string of hashtags
+  productId     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model HashtagSet {
+  id          String   @id @default(cuid())
+  name        String
+  hashtags    String   // JSON string of hashtag array
+  category    String?
+  usageCount  Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model PostAnalytics {
+  id          String   @id @default(cuid())
+  postId      String
+  platform    String
+  likes       Int      @default(0)
+  comments    Int      @default(0)
+  shares      Int      @default(0)
+  saves       Int      @default(0)
+  reach       Int      @default(0)
+  impressions Int      @default(0)
+  date        DateTime
+  createdAt   DateTime @default(now())
+}
+
+model Collection {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  coverImage  String?
+  products    String?  // JSON string of product IDs
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
