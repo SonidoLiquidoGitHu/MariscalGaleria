@@ -35,13 +35,13 @@ import {
 
 // ─── Navigation items config ─────────────────────────────────────────────────
 const navItems: { id: Section; label: string; icon: React.ElementType }[] = [
-  { id: 'gallery', label: 'Gallery', icon: Gem },
-  { id: 'upload', label: 'Upload', icon: Upload },
-  { id: 'schedule', label: 'Schedule', icon: Clock },
-  { id: 'calendar', label: 'Calendar', icon: CalendarDays },
-  { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+  { id: 'gallery', label: 'Galería', icon: Gem },
+  { id: 'upload', label: 'Subir', icon: Upload },
+  { id: 'schedule', label: 'Programar', icon: Clock },
+  { id: 'calendar', label: 'Calendario', icon: CalendarDays },
+  { id: 'analytics', label: 'Analíticas', icon: BarChart3 },
   { id: 'hashtags', label: 'Hashtags', icon: Hash },
-  { id: 'ai-studio', label: 'AI Studio', icon: Sparkles },
+  { id: 'ai-studio', label: 'Estudio IA', icon: Sparkles },
 ]
 
 // ─── Sidebar widths ──────────────────────────────────────────────────────────
@@ -161,8 +161,8 @@ function SidebarContent({
                 transition={{ duration: 0.15, ease: 'easeInOut' }}
                 className="overflow-hidden"
               >
-                <h1 className="whitespace-nowrap text-lg font-semibold tracking-[0.2em] text-sidebar-foreground">
-                  ARGENTI
+                <h1 className="whitespace-nowrap text-lg font-semibold tracking-[0.15em] text-sidebar-foreground">
+                  MARISCAL
                 </h1>
               </motion.div>
             )}
@@ -177,7 +177,7 @@ function SidebarContent({
               transition={{ duration: 0.15, delay: 0.05 }}
               className="mt-1 whitespace-nowrap text-[11px] font-medium tracking-widest text-silver-dark/70 uppercase"
             >
-              925 Silver Gallery
+              Joyería de Autor · Plata 925
             </motion.p>
           )}
         </AnimatePresence>
@@ -212,7 +212,7 @@ function SidebarContent({
                   'text-silver-dark hover:bg-sidebar-accent hover:text-sidebar-foreground',
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-gold'
                 )}
-                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
               >
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.span
@@ -233,7 +233,7 @@ function SidebarContent({
               </button>
             </TooltipTrigger>
             <TooltipContent side="right" sideOffset={12}>
-              {theme === 'dark' ? 'Light mode' : 'Dark mode'}
+              {theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
             </TooltipContent>
           </Tooltip>
         ) : (
@@ -244,7 +244,7 @@ function SidebarContent({
               'text-silver-dark hover:bg-sidebar-accent hover:text-sidebar-foreground',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-gold'
             )}
-            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
           >
             <span className="flex h-5 w-5 shrink-0 items-center justify-center">
               <AnimatePresence mode="wait" initial={false}>
@@ -273,7 +273,7 @@ function SidebarContent({
                   transition={{ duration: 0.15, ease: 'easeInOut' }}
                   className="overflow-hidden whitespace-nowrap"
                 >
-                  {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                  {theme === 'dark' ? 'Modo Claro' : 'Modo Oscuro'}
                 </motion.span>
               )}
             </AnimatePresence>
@@ -302,13 +302,13 @@ function CollapseButton({ collapsed }: { collapsed: boolean }) {
               'text-silver-dark hover:bg-sidebar-accent hover:text-sidebar-foreground',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-gold'
             )}
-            aria-label="Expand sidebar"
+            aria-label="Expandir menú lateral"
           >
             <PanelLeftOpen className="h-[18px] w-[18px]" strokeWidth={1.8} />
           </button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={12}>
-          Expand
+          Expandir
         </TooltipContent>
       </Tooltip>
     )
@@ -322,7 +322,7 @@ function CollapseButton({ collapsed }: { collapsed: boolean }) {
         'text-silver-dark hover:bg-sidebar-accent hover:text-sidebar-foreground',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-gold'
       )}
-      aria-label="Collapse sidebar"
+      aria-label="Colapsar menú lateral"
     >
       <span className="flex h-5 w-5 shrink-0 items-center justify-center">
         <PanelLeftClose className="h-[18px] w-[18px]" strokeWidth={1.8} />
@@ -334,7 +334,7 @@ function CollapseButton({ collapsed }: { collapsed: boolean }) {
         transition={{ duration: 0.15, ease: 'easeInOut' }}
         className="overflow-hidden whitespace-nowrap"
       >
-        Collapse
+        Colapsar
       </motion.span>
     </button>
   )
@@ -369,8 +369,8 @@ export default function Sidebar() {
             className="w-[280px] border-none p-0 [&>button]:hidden"
           >
             <SheetHeader className="sr-only">
-              <SheetTitle>Navigation</SheetTitle>
-              <SheetDescription>Browse application sections</SheetDescription>
+              <SheetTitle>Navegación</SheetTitle>
+              <SheetDescription>Explora las secciones de la aplicación</SheetDescription>
             </SheetHeader>
             <SidebarContent collapsed={false} onClose={() => setMobileOpen(false)} />
           </SheetContent>

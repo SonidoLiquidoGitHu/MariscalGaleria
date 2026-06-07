@@ -44,11 +44,11 @@ function formatFileSize(bytes: number): string {
 }
 
 const CATEGORIES = [
-  'Rings',
-  'Necklaces',
-  'Bracelets',
-  'Earrings',
-  'Pendants',
+  'Anillos',
+  'Collares',
+  'Pulseras',
+  'Aretes',
+  'Dijes',
   'Sets',
 ]
 
@@ -148,16 +148,16 @@ export default function Upload() {
   const handleSubmit = useCallback(() => {
     if (!formData.name.trim()) {
       toast({
-        title: 'Missing information',
-        description: 'Please enter a product name.',
+        title: 'Información faltante',
+        description: 'Por favor ingresa el nombre del producto.',
         variant: 'destructive',
       })
       return
     }
     if (!formData.category) {
       toast({
-        title: 'Missing information',
-        description: 'Please select a category.',
+        title: 'Información faltante',
+        description: 'Por favor selecciona una categoría.',
         variant: 'destructive',
       })
       return
@@ -201,8 +201,8 @@ export default function Upload() {
           addProduct(product)
 
           toast({
-            title: '✨ Collection updated',
-            description: `"${formData.name}" has been added to your silver gallery.`,
+            title: '✨ Colección actualizada',
+            description: `"${formData.name}" ha sido agregada a tu galería de plata.`,
           })
 
           setIsUploading(false)
@@ -238,7 +238,7 @@ export default function Upload() {
         className="text-center"
       >
         <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-          Upload Collection
+          Subir Colección
         </h1>
         <div className="mx-auto mt-3 flex items-center justify-center gap-3">
           <span className="h-px w-12 bg-rose-gold/40" />
@@ -248,7 +248,7 @@ export default function Upload() {
           <span className="h-px w-12 bg-rose-gold/40" />
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
-          Add new pieces to your silver gallery
+          Agrega nuevas piezas a tu galería de plata
         </p>
       </motion.div>
 
@@ -279,12 +279,12 @@ export default function Upload() {
             </motion.div>
 
             <p className="text-base font-medium text-foreground">
-              Drag &amp; drop your images and videos here
+              Arrastra y suelta tus imágenes y videos aquí
             </p>
             <p className="text-sm text-muted-foreground">
-              or{' '}
+              o{' '}
               <span className="cursor-pointer font-medium text-rose-gold underline underline-offset-4 hover:text-rose-gold/80">
-                click to browse
+                haz clic para explorar
               </span>
             </p>
             <p className="mt-1 text-xs text-muted-foreground/70">
@@ -321,7 +321,7 @@ export default function Upload() {
           >
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-sm font-semibold text-foreground">
-                Selected Files
+                Archivos Seleccionados
                 <span className="ml-2 text-xs font-normal text-muted-foreground">
                   ({files.length})
                 </span>
@@ -335,7 +335,7 @@ export default function Upload() {
                   clearAll()
                 }}
               >
-                Remove all
+                Eliminar todo
               </Button>
             </div>
 
@@ -427,7 +427,7 @@ export default function Upload() {
             <div className="flex items-center gap-2">
               <ImageIcon className="size-4 text-rose-gold" />
               <h2 className="text-base font-semibold text-foreground">
-                Product Details
+                Detalles del Producto
               </h2>
             </div>
 
@@ -435,11 +435,11 @@ export default function Upload() {
               {/* Name */}
               <div className="space-y-1.5 sm:col-span-2">
                 <Label htmlFor="product-name">
-                  Product Name <span className="text-destructive">*</span>
+                  Nombre del Producto <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="product-name"
-                  placeholder="e.g. Celestial Moon Ring"
+                  placeholder="ej. Anillo Luna Celestial"
                   value={formData.name}
                   onChange={(e) =>
                     setFormData((p) => ({ ...p, name: e.target.value }))
@@ -450,10 +450,10 @@ export default function Upload() {
 
               {/* Description */}
               <div className="space-y-1.5 sm:col-span-2">
-                <Label htmlFor="product-desc">Description</Label>
+                <Label htmlFor="product-desc">Descripción</Label>
                 <Textarea
                   id="product-desc"
-                  placeholder="Describe the craftsmanship, materials, and inspiration..."
+                  placeholder="Describe la artesanía, los materiales y la inspiración..."
                   rows={3}
                   value={formData.description}
                   onChange={(e) =>
@@ -465,7 +465,7 @@ export default function Upload() {
 
               {/* Price */}
               <div className="space-y-1.5">
-                <Label htmlFor="product-price">Price ($)</Label>
+                <Label htmlFor="product-price">Precio ($)</Label>
                 <Input
                   id="product-price"
                   type="number"
@@ -483,7 +483,7 @@ export default function Upload() {
               {/* Category */}
               <div className="space-y-1.5">
                 <Label>
-                  Category <span className="text-destructive">*</span>
+                  Categoría <span className="text-destructive">*</span>
                 </Label>
                 <Select
                   value={formData.category}
@@ -492,7 +492,7 @@ export default function Upload() {
                   }
                 >
                   <SelectTrigger className="w-full border-border/60 focus:ring-rose-gold/30">
-                    <SelectValue placeholder="Select category" />
+                    <SelectValue placeholder="Selecciona categoría" />
                   </SelectTrigger>
                   <SelectContent>
                     {CATEGORIES.map((cat) => (
@@ -520,7 +520,7 @@ export default function Upload() {
 
               {/* Video URL */}
               <div className="space-y-1.5">
-                <Label htmlFor="video-url">Video URL</Label>
+                <Label htmlFor="video-url">URL de Video</Label>
                 <Input
                   id="video-url"
                   placeholder="https://..."
@@ -541,7 +541,7 @@ export default function Upload() {
                   }
                   className="data-[state=checked]:bg-rose-gold"
                 />
-                <Label className="cursor-pointer">Mark as Featured</Label>
+                <Label className="cursor-pointer">Marcar como Destacada</Label>
               </div>
             </div>
           </CardContent>
@@ -558,7 +558,7 @@ export default function Upload() {
             className="space-y-2"
           >
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground">Uploading...</span>
+              <span className="text-muted-foreground">Subiendo...</span>
               <span className="font-medium text-rose-gold">
                 {progress}%
               </span>
@@ -584,7 +584,7 @@ export default function Upload() {
           disabled={isUploading}
           className="text-muted-foreground hover:text-destructive"
         >
-          Clear All
+          Limpiar Todo
         </Button>
         <Button
           onClick={handleSubmit}
@@ -598,12 +598,12 @@ export default function Upload() {
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
                 className="inline-block size-4 rounded-full border-2 border-white/30 border-t-white"
               />
-              Uploading...
+              Subiendo...
             </span>
           ) : (
             <span className="flex items-center gap-2">
               <CloudUpload className="size-4" />
-              Upload &amp; Save
+              Subir y Guardar
             </span>
           )}
         </Button>

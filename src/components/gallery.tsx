@@ -65,7 +65,7 @@ function categoryLabel(value: string) {
 
 function formatPrice(price?: number) {
   if (price == null) return ''
-  return `$${price.toFixed(2)}`
+  return `$${price.toLocaleString('es-MX', { minimumFractionDigits: 2 })}`
 }
 
 /* ─── Sub-components ─── */
@@ -86,10 +86,10 @@ function EmptyState() {
           <Star className="h-3 w-3 text-rose-gold" />
         </div>
       </div>
-      <h3 className="text-lg font-medium text-foreground mb-2">No Pieces Found</h3>
+      <h3 className="text-lg font-medium text-foreground mb-2">No se encontraron piezas</h3>
       <p className="text-sm text-muted-foreground max-w-xs">
-        We couldn&apos;t find any jewelry matching your search. Try adjusting your filters or explore
-        the full collection.
+        No encontramos joyería que coincida con tu búsqueda. Intenta ajustar los filtros o explora
+        la colección completa.
       </p>
     </motion.div>
   )
@@ -183,7 +183,7 @@ function ProductCard({
             <button
               onClick={() => onDelete(product)}
               className="shrink-0 mt-0.5 opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-destructive"
-              aria-label="Delete product"
+              aria-label="Eliminar producto"
             >
               <Trash2 className="h-3.5 w-3.5" />
             </button>
@@ -324,7 +324,7 @@ export default function Gallery() {
       >
         <div className="text-center space-y-2">
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-foreground">
-            Gallery
+            Galería
           </h1>
           <div className="flex items-center justify-center gap-3">
             <span className="h-px w-12 bg-rose-gold/40" />
@@ -332,7 +332,7 @@ export default function Gallery() {
             <span className="h-px w-12 bg-rose-gold/40" />
           </div>
           <p className="text-sm text-muted-foreground tracking-wide">
-            Curated 925 Silver Collection
+            Colección Curada de Plata 925 — Joyería de Autor, Zacatecas México
           </p>
         </div>
 
@@ -340,7 +340,7 @@ export default function Gallery() {
         <div className="relative max-w-md mx-auto">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search jewelry..."
+            placeholder="Buscar joyería..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9 pr-9 bg-card border-border/60 focus:border-rose-gold/50 focus:ring-rose-gold/20 rounded-full h-10"
@@ -349,7 +349,7 @@ export default function Gallery() {
             <button
               onClick={() => setSearchQuery('')}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
-              aria-label="Clear search"
+              aria-label="Limpiar búsqueda"
             >
               <X className="h-4 w-4" />
             </button>
@@ -393,7 +393,7 @@ export default function Gallery() {
             <div className="flex items-center gap-3">
               <Star className="h-4 w-4 text-rose-gold fill-rose-gold" />
               <h2 className="text-lg font-semibold text-foreground">
-                Featured Pieces
+                Piezas Destacadas
               </h2>
               <div className="flex-1 h-px bg-border" />
             </div>
@@ -441,14 +441,14 @@ export default function Gallery() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Trash2 className="h-5 w-5 text-destructive" />
-              Delete Piece
+              Eliminar Pieza
             </DialogTitle>
             <DialogDescription>
-              Are you sure you want to remove{' '}
+              ¿Estás seguro de que deseas eliminar{' '}
               <span className="font-medium text-foreground">
                 {deleteTarget?.name}
               </span>{' '}
-              from your collection? This action cannot be undone.
+              de tu colección? Esta acción no se puede deshacer.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="gap-2 sm:gap-0">
@@ -457,14 +457,14 @@ export default function Gallery() {
               onClick={() => setDeleteDialogOpen(false)}
               className="rounded-full"
             >
-              Cancel
+              Cancelar
             </Button>
             <Button
               variant="destructive"
               onClick={confirmDelete}
               className="rounded-full"
             >
-              Delete
+              Eliminar
             </Button>
           </DialogFooter>
         </DialogContent>

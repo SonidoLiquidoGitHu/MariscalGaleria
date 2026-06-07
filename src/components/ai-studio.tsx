@@ -101,20 +101,20 @@ const GENERATION_TYPES: {
 }[] = [
   {
     type: 'caption',
-    label: 'Captions',
-    description: 'Generate social media captions',
+    label: 'Textos',
+    description: 'Genera textos para redes sociales',
     icon: MessageSquare,
   },
   {
     type: 'hashtags',
     label: 'Hashtags',
-    description: 'Generate relevant hashtags',
+    description: 'Genera hashtags relevantes',
     icon: Hash,
   },
   {
     type: 'ideas',
-    label: 'Content Ideas',
-    description: 'Get creative post ideas',
+    label: 'Ideas de Contenido',
+    description: 'Obtén ideas creativas para publicaciones',
     icon: Lightbulb,
   },
 ]
@@ -247,15 +247,15 @@ function EmptyState() {
         </motion.div>
       </div>
       <h3 className="text-lg font-medium text-foreground mb-2">
-        Start by selecting a content type above
+        Comienza seleccionando un tipo de contenido arriba
       </h3>
       <p className="text-sm text-muted-foreground max-w-sm">
-        Select a product from your gallery for tailored content, or provide custom context to guide
-        the AI.
+        Selecciona un producto de tu galería para contenido personalizado, o proporciona contexto para guiar
+        a la IA.
       </p>
       <div className="flex items-center gap-2 mt-4 text-xs text-muted-foreground">
         <Wand2 className="h-3.5 w-3.5 text-rose-gold" />
-        <span>Powered by AI for your 925 Silver Collection</span>
+        <span>Impulsado por IA para tu Colección de Plata 925 — Joyería de Autor, Zacatecas México</span>
       </div>
     </motion.div>
   )
@@ -324,14 +324,14 @@ function CaptionResults({ results }: { results: string[] }) {
 
   function handleCopy(text: string) {
     navigator.clipboard.writeText(text)
-    toast({ title: 'Copied!', description: 'Caption copied to clipboard.' })
+    toast({ title: '¡Copiado!', description: 'Texto copiado al portapapeles.' })
   }
 
   function handleUseInPost(text: string) {
     navigator.clipboard.writeText(text)
     toast({
-      title: 'Ready to schedule!',
-      description: 'Caption copied. Navigate to Schedule to create your post.',
+      title: '¡Listo para programar!',
+      description: 'Texto copiado. Ve a Programar para crear tu publicación.',
     })
   }
 
@@ -352,7 +352,7 @@ function CaptionResults({ results }: { results: string[] }) {
                   className="h-8 text-xs gap-1.5 rounded-full border-border/60 hover:border-rose-gold/40 hover:text-rose-gold"
                 >
                   <Copy className="h-3 w-3" />
-                  Copy
+                  Copiar
                 </Button>
                 <Button
                   size="sm"
@@ -360,7 +360,7 @@ function CaptionResults({ results }: { results: string[] }) {
                   className="h-8 text-xs gap-1.5 rounded-full bg-rose-gold hover:bg-rose-gold/90 text-white"
                 >
                   <CalendarPlus className="h-3 w-3" />
-                  Use in Post
+                  Usar en Publicación
                 </Button>
               </div>
             </CardContent>
@@ -377,27 +377,27 @@ function HashtagResults({ results }: { results: string[] }) {
 
   function handleCopyTag(tag: string) {
     navigator.clipboard.writeText(tag)
-    toast({ title: 'Copied!', description: `${tag} copied to clipboard.` })
+    toast({ title: '¡Copiado!', description: `${tag} copiado al portapapeles.` })
   }
 
   function handleCopyAll() {
     const allTags = results.join(' ')
     navigator.clipboard.writeText(allTags)
-    toast({ title: 'All copied!', description: 'All hashtags copied to clipboard.' })
+    toast({ title: '¡Todo copiado!', description: 'Todos los hashtags copiados al portapapeles.' })
   }
 
   function handleSaveAsSet() {
     const newSet: HashtagSet = {
       id: crypto.randomUUID(),
-      name: `AI Generated - ${new Date().toLocaleDateString()}`,
+      name: `Generado por IA - ${new Date().toLocaleDateString()}`,
       hashtags: results,
       category: 'ai-generated',
       usageCount: 0,
     }
     addHashtagSet(newSet)
     toast({
-      title: 'Saved!',
-      description: 'Hashtag set saved to your collection.',
+      title: '¡Guardado!',
+      description: 'Set de hashtags guardado en tu colección.',
     })
   }
 
@@ -432,7 +432,7 @@ function HashtagResults({ results }: { results: string[] }) {
               className="h-8 text-xs gap-1.5 rounded-full border-border/60 hover:border-rose-gold/40 hover:text-rose-gold"
             >
               <Copy className="h-3 w-3" />
-              Copy All
+              Copiar Todo
             </Button>
             <Button
               size="sm"
@@ -440,7 +440,7 @@ function HashtagResults({ results }: { results: string[] }) {
               className="h-8 text-xs gap-1.5 rounded-full bg-rose-gold hover:bg-rose-gold/90 text-white"
             >
               <Bookmark className="h-3 w-3" />
-              Save as Set
+              Guardar como Set
             </Button>
           </div>
         </CardContent>
@@ -456,8 +456,8 @@ function IdeasResults({ results }: { results: ContentIdea[] }) {
     const text = `${idea.title}\n\n${idea.description}`
     navigator.clipboard.writeText(text)
     toast({
-      title: 'Ready to create!',
-      description: `Idea copied. Navigate to Schedule to create your ${idea.platform} post.`,
+      title: '¡Listo para crear!',
+      description: `Idea copiada. Ve a Programar para crear tu publicación en ${idea.platform}.`,
     })
   }
 
@@ -493,7 +493,7 @@ function IdeasResults({ results }: { results: ContentIdea[] }) {
                 className="h-8 text-xs gap-1.5 rounded-full bg-rose-gold hover:bg-rose-gold/90 text-white"
               >
                 <CalendarPlus className="h-3 w-3" />
-                Create Post
+                Crear Publicación
               </Button>
             </CardContent>
           </Card>
@@ -555,7 +555,7 @@ export default function AIStudio() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null)
-        throw new Error(errorData?.details || errorData?.error || 'Generation failed')
+        throw new Error(errorData?.details || errorData?.error || 'Error en la generación')
       }
 
       const data = await response.json()
@@ -579,15 +579,15 @@ export default function AIStudio() {
         addHistory(selectedType, ideas as unknown as string[])
       } else {
         toast({
-          title: 'Unexpected format',
-          description: 'AI returned an unexpected format. Please try again.',
+          title: 'Formato inesperado',
+          description: 'La IA devolvió un formato inesperado. Por favor intenta de nuevo.',
           variant: 'destructive',
         })
       }
     } catch (err: any) {
       toast({
-        title: 'Generation failed',
-        description: err.message || 'Something went wrong. Please try again.',
+        title: 'Error en la generación',
+        description: err.message || 'Algo salió mal. Por favor intenta de nuevo.',
         variant: 'destructive',
       })
     } finally {
@@ -599,7 +599,7 @@ export default function AIStudio() {
     const preview =
       typeof results[0] === 'string'
         ? (results[0] as string).slice(0, 60)
-        : 'Content ideas generated'
+        : 'Ideas de contenido generadas'
     setHistory((prev) => [
       {
         id: crypto.randomUUID(),
@@ -635,7 +635,7 @@ export default function AIStudio() {
             <Sparkles className="h-8 w-8 text-rose-gold" />
           </motion.div>
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-foreground">
-            AI Studio
+            Estudio IA
           </h1>
         </div>
         <div className="flex items-center justify-center gap-3">
@@ -644,7 +644,7 @@ export default function AIStudio() {
           <span className="h-px w-12 bg-rose-gold/40" />
         </div>
         <p className="text-sm text-muted-foreground tracking-wide">
-          Generate captivating content with AI
+          Genera contenido cautivador con IA
         </p>
       </motion.div>
 
@@ -668,13 +668,13 @@ export default function AIStudio() {
             {/* Product Selector */}
             <div className="space-y-2">
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Link a Product{' '}
-                <span className="normal-case tracking-normal">(optional)</span>
+                Vincular un Producto{' '}
+                <span className="normal-case tracking-normal">(opcional)</span>
               </label>
               {products.length > 0 ? (
                 <Select value={selectedProductId} onValueChange={setSelectedProductId}>
                   <SelectTrigger className="w-full bg-card border-border/60 focus:border-rose-gold/50 focus:ring-rose-gold/20">
-                    <SelectValue placeholder="Select a product from your gallery..." />
+                    <SelectValue placeholder="Selecciona un producto de tu galería..." />
                   </SelectTrigger>
                   <SelectContent>
                     {products.map((product) => (
@@ -686,7 +686,7 @@ export default function AIStudio() {
                 </Select>
               ) : (
                 <p className="text-xs text-muted-foreground italic py-2">
-                  No products in your gallery yet. Upload products for tailored content.
+                  Aún no hay productos en tu galería. Sube productos para contenido personalizado.
                 </p>
               )}
               {selectedProduct && (
@@ -711,10 +711,10 @@ export default function AIStudio() {
             {/* Custom Context */}
             <div className="space-y-2">
               <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Custom Context
+                Contexto Personalizado
               </label>
               <Textarea
-                placeholder="Describe the mood, occasion, or style you want the content to reflect..."
+                placeholder="Describe el ambiente, ocasión o estilo que deseas que el contenido refleje..."
                 value={customContext}
                 onChange={(e) => setCustomContext(e.target.value)}
                 className="min-h-[80px] bg-card border-border/60 focus:border-rose-gold/50 focus:ring-rose-gold/20 resize-none"
@@ -738,12 +738,12 @@ export default function AIStudio() {
               {isGenerating ? (
                 <>
                   <Loader2 className="h-4 w-4 animate-spin" />
-                  Generating...
+                  Generando...
                 </>
               ) : (
                 <>
                   <Sparkles className="h-4 w-4" />
-                  Generate {selectedType ? typeLabel(selectedType) : 'Content'}
+                  Generar {selectedType ? typeLabel(selectedType) : 'Contenido'}
                   <ArrowRight className="h-4 w-4" />
                 </>
               )}
@@ -764,7 +764,7 @@ export default function AIStudio() {
             <div className="flex items-center gap-3 mb-4">
               <Loader2 className="h-4 w-4 text-rose-gold animate-spin" />
               <h2 className="text-lg font-semibold text-foreground">
-                Generating {selectedType ? typeLabel(selectedType) : ''}...
+                Generando {selectedType ? typeLabel(selectedType) : ''}...
               </h2>
             </div>
             <LoadingSkeleton type={selectedType!} />
@@ -781,7 +781,7 @@ export default function AIStudio() {
             <div className="flex items-center gap-3">
               <Sparkles className="h-4 w-4 text-rose-gold" />
               <h2 className="text-lg font-semibold text-foreground">
-                Generated {selectedType ? typeLabel(selectedType) : 'Results'}
+                Generado(s) {selectedType ? typeLabel(selectedType) : 'Resultados'}
               </h2>
               <div className="flex-1 h-px bg-border" />
             </div>
@@ -818,7 +818,7 @@ export default function AIStudio() {
         >
           <div className="flex items-center gap-3">
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
-              Recent Generations
+              Generaciones Recientes
             </h2>
             <div className="flex-1 h-px bg-border" />
           </div>

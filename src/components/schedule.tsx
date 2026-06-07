@@ -64,7 +64,7 @@ const DEMO_SCHEDULED_POSTS: ScheduledPost[] = [
   {
     id: 'sp-1',
     caption:
-      'Embrace the moonlight with our Celestial Moon Ring. Handcrafted 925 silver that captures the essence of nighttime elegance. Which phase speaks to your soul?',
+      'Abraza la luz de la luna con nuestro Anillo Luna Celestial. Artesanal en plata 925 que captura la esencia de la elegancia nocturna. ¿Qué fase habla a tu alma? — joyería de autor, plata 925, Zacatecas México',
     platform: 'instagram',
     media: ['https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=400&fit=crop'],
     scheduledAt: addHours(new Date(), 3).toISOString(),
@@ -76,7 +76,7 @@ const DEMO_SCHEDULED_POSTS: ScheduledPost[] = [
   {
     id: 'sp-2',
     caption:
-      'Layer up this season with our Whisper Chain Necklace. Delicate meets bold in every link. Perfect for your everyday elegance.',
+      'Acompaña esta temporada con nuestro Collar Cadena Susurro. Lo delicado se encuentra con lo audaz en cada eslabón. Perfecto para tu elegancia diaria. — joyería de autor, plata 925, Zacatecas México',
     platform: 'both',
     media: ['https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=400&fit=crop'],
     scheduledAt: addDays(new Date(), 1).toISOString(),
@@ -89,7 +89,7 @@ const DEMO_SCHEDULED_POSTS: ScheduledPost[] = [
   {
     id: 'sp-3',
     caption:
-      'Our Ethereal Cuff Bracelet just dropped. Polished 925 silver with organic flowing design that wraps your wrist in pure artistry.',
+      'Nuestra Pulsera Cuff Etérea acaba de llegar. Plata 925 pulida con diseño orgánico fluido que envuelve tu muñeca en pura artesanía. — joyería de autor, plata 925, Zacatecas México',
     platform: 'facebook',
     media: ['https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=400&h=400&fit=crop'],
     scheduledAt: addDays(new Date(), -1).toISOString(),
@@ -101,7 +101,7 @@ const DEMO_SCHEDULED_POSTS: ScheduledPost[] = [
   },
   {
     id: 'sp-4',
-    caption: 'Coming soon: Drop Crystal Earrings that redefine elegance. Stay tuned for the launch.',
+    caption: 'Próximamente: Aretes Gota de Cristal que redefinen la elegancia. Espera el lanzamiento. — joyería de autor, plata 925, Zacatecas México',
     platform: 'instagram',
     media: ['https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop'],
     scheduledAt: addDays(new Date(), 2).toISOString(),
@@ -111,7 +111,7 @@ const DEMO_SCHEDULED_POSTS: ScheduledPost[] = [
   },
   {
     id: 'sp-5',
-    caption: 'New collection alert! Infinity Wrap Ring now available. Swipe to see details.',
+    caption: '¡Alerta de nueva colección! Anillo Infinito ahora disponible. Desliza para ver detalles. — joyería de autor, plata 925, Zacatecas México',
     platform: 'instagram',
     media: ['https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=400&h=400&fit=crop'],
     scheduledAt: addDays(new Date(), -2).toISOString(),
@@ -137,19 +137,19 @@ function PlatformIcon({ platform, className }: { platform: string; className?: s
 // ─── Status Badge ───────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: ScheduledPost['status'] }) {
   const config = {
-    draft: { label: 'Draft', className: 'bg-gray-100 text-gray-600 hover:bg-gray-100', icon: Timer },
+    draft: { label: 'Borrador', className: 'bg-gray-100 text-gray-600 hover:bg-gray-100', icon: Timer },
     scheduled: {
-      label: 'Scheduled',
+      label: 'Programada',
       className: 'bg-amber-50 text-amber-700 hover:bg-amber-50 border-amber-200',
       icon: Clock,
     },
     published: {
-      label: 'Published',
+      label: 'Publicada',
       className: 'bg-emerald-50 text-emerald-700 hover:bg-emerald-50 border-emerald-200',
       icon: CheckCircle2,
     },
     failed: {
-      label: 'Failed',
+      label: 'Fallida',
       className: 'bg-red-50 text-red-600 hover:bg-red-50 border-red-200',
       icon: AlertCircle,
     },
@@ -167,8 +167,8 @@ function StatusBadge({ status }: { status: ScheduledPost['status'] }) {
 // ─── Format Scheduled Date ──────────────────────────────────────────────────────
 function formatScheduledDate(dateStr: string) {
   const date = parseISO(dateStr)
-  if (isToday(date)) return `Today at ${format(date, 'h:mm a')}`
-  if (isTomorrow(date)) return `Tomorrow at ${format(date, 'h:mm a')}`
+  if (isToday(date)) return `Hoy a las ${format(date, 'h:mm a')}`
+  if (isTomorrow(date)) return `Mañana a las ${format(date, 'h:mm a')}`
   return format(date, 'MMM d, yyyy · h:mm a')
 }
 
@@ -263,7 +263,7 @@ export default function Schedule() {
     if (set) {
       const newTags = set.hashtags.filter((h) => !hashtags.includes(h))
       setHashtags((prev) => [...prev, ...newTags])
-      toast({ title: 'Hashtags added', description: `${newTags.length} hashtags from "${set.name}"` })
+      toast({ title: 'Hashtags agregados', description: `${newTags.length} hashtags de "${set.name}"` })
     }
   }
 
@@ -277,7 +277,7 @@ export default function Schedule() {
       if (!caption) {
         setCaption(product.description || product.name)
       }
-      toast({ title: 'Media attached', description: `From "${product.name}"` })
+      toast({ title: 'Medios adjuntados', description: `De "${product.name}"` })
     }
   }
 
@@ -313,11 +313,11 @@ export default function Schedule() {
   // ── Submit handlers ──
   const handleSchedulePost = () => {
     if (!caption.trim()) {
-      toast({ title: 'Caption required', description: 'Please add a caption for your post.', variant: 'destructive' })
+      toast({ title: 'Texto requerido', description: 'Por favor agrega un texto para tu publicación.', variant: 'destructive' })
       return
     }
     if (!scheduledDate) {
-      toast({ title: 'Date required', description: 'Please select a date and time.', variant: 'destructive' })
+      toast({ title: 'Fecha requerida', description: 'Por favor selecciona una fecha y hora.', variant: 'destructive' })
       return
     }
 
@@ -335,7 +335,7 @@ export default function Schedule() {
         productId: selectedProductId || undefined,
         status: 'scheduled',
       })
-      toast({ title: 'Post updated', description: 'Your scheduled post has been updated.' })
+      toast({ title: 'Publicación actualizada', description: 'Tu publicación programada ha sido actualizada.' })
     } else {
       const newPost: ScheduledPost = {
         id: `sp-${Date.now()}`,
@@ -350,14 +350,14 @@ export default function Schedule() {
         productId: selectedProductId || undefined,
       }
       addScheduledPost(newPost)
-      toast({ title: 'Post scheduled', description: `Scheduled for ${formatScheduledDate(scheduledAt)}` })
+      toast({ title: 'Publicación programada', description: `Programada para ${formatScheduledDate(scheduledAt)}` })
     }
     resetForm()
   }
 
   const handleSaveDraft = () => {
     if (!caption.trim()) {
-      toast({ title: 'Caption required', description: 'Please add a caption to save as draft.', variant: 'destructive' })
+      toast({ title: 'Texto requerido', description: 'Por favor agrega un texto para guardar como borrador.', variant: 'destructive' })
       return
     }
 
@@ -375,7 +375,7 @@ export default function Schedule() {
         productId: selectedProductId || undefined,
         status: 'draft',
       })
-      toast({ title: 'Draft updated', description: 'Your draft has been saved.' })
+      toast({ title: 'Borrador actualizado', description: 'Tu borrador ha sido guardado.' })
     } else {
       const draft: ScheduledPost = {
         id: `sp-${Date.now()}`,
@@ -390,7 +390,7 @@ export default function Schedule() {
         productId: selectedProductId || undefined,
       }
       addScheduledPost(draft)
-      toast({ title: 'Draft saved', description: 'Your post has been saved as a draft.' })
+      toast({ title: 'Borrador guardado', description: 'Tu publicación ha sido guardada como borrador.' })
     }
     resetForm()
   }
@@ -422,13 +422,13 @@ export default function Schedule() {
       scheduledAt: addDays(new Date(), 1).toISOString(),
     }
     addScheduledPost(duplicate)
-    toast({ title: 'Post duplicated', description: 'A copy has been saved as draft.' })
+    toast({ title: 'Publicación duplicada', description: 'Una copia ha sido guardada como borrador.' })
   }
 
   const handleDelete = () => {
     if (postToDelete) {
       deleteScheduledPost(postToDelete)
-      toast({ title: 'Post deleted', description: 'The scheduled post has been removed.' })
+      toast({ title: 'Publicación eliminada', description: 'La publicación programada ha sido eliminada.' })
       setPostToDelete(null)
       setDeleteDialogOpen(false)
     }
@@ -456,10 +456,10 @@ export default function Schedule() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            Auto-Post <span className="text-rose-gold">Scheduler</span>
+            Programador de <span className="text-rose-gold">Publicaciones</span>
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Schedule and automate your social media posts
+            Programa y automatiza tus publicaciones en redes sociales
           </p>
         </div>
 
@@ -472,7 +472,7 @@ export default function Schedule() {
               </div>
               <div>
                 <p className="text-lg font-bold leading-none">{totalScheduled}</p>
-                <p className="text-[11px] text-muted-foreground">Scheduled</p>
+                <p className="text-[11px] text-muted-foreground">Programadas</p>
               </div>
             </CardContent>
           </Card>
@@ -483,7 +483,7 @@ export default function Schedule() {
               </div>
               <div>
                 <p className="text-lg font-bold leading-none">{publishedToday}</p>
-                <p className="text-[11px] text-muted-foreground">Published Today</p>
+                <p className="text-[11px] text-muted-foreground">Publicadas Hoy</p>
               </div>
             </CardContent>
           </Card>
@@ -494,7 +494,7 @@ export default function Schedule() {
               </div>
               <div>
                 <p className="text-lg font-bold leading-none">{failedCount}</p>
-                <p className="text-[11px] text-muted-foreground">Failed</p>
+                <p className="text-[11px] text-muted-foreground">Fallidas</p>
               </div>
             </CardContent>
           </Card>
@@ -508,12 +508,12 @@ export default function Schedule() {
             <div className="flex size-7 items-center justify-center rounded-md rose-gold-gradient">
               <Plus className="size-4 text-white" />
             </div>
-            {editingPostId ? 'Edit Scheduled Post' : 'New Scheduled Post'}
+            {editingPostId ? 'Editar Publicación Programada' : 'Nueva Publicación Programada'}
           </CardTitle>
           <CardDescription className="text-xs">
             {editingPostId
-              ? 'Update your scheduled post details'
-              : 'Compose and schedule a post for Instagram, Facebook, or both'}
+              ? 'Actualiza los detalles de tu publicación programada'
+              : 'Redacta y programa una publicación para Instagram, Facebook o ambas'}
           </CardDescription>
         </CardHeader>
 
@@ -521,7 +521,7 @@ export default function Schedule() {
           {/* ── Platform Selection ── */}
           <div className="space-y-2">
             <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Platform
+              Plataforma
             </Label>
             <div className="flex gap-2">
               {(['instagram', 'facebook', 'both'] as const).map((p) => (
@@ -542,7 +542,7 @@ export default function Schedule() {
                   )}
                 >
                   <PlatformIcon platform={p} />
-                  <span className="capitalize">{p === 'both' ? 'Both' : p}</span>
+                  <span className="capitalize">{p === 'both' ? 'Ambas' : p}</span>
                 </Button>
               ))}
             </div>
@@ -551,7 +551,7 @@ export default function Schedule() {
           {/* ── Media Attachment ── */}
           <div className="space-y-2">
             <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Media
+              Medios
             </Label>
             {media.length > 0 ? (
               <div className="flex flex-wrap gap-3">
@@ -584,7 +584,7 @@ export default function Schedule() {
                   className="flex flex-1 items-center justify-center gap-2 rounded-lg border-2 border-dashed border-muted-foreground/25 p-6 transition-colors hover:border-rose-gold hover:bg-rose-gold/5"
                 >
                   <ImagePlus className="size-5 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Attach from product gallery</span>
+                  <span className="text-sm text-muted-foreground">Adjuntar desde la galería de productos</span>
                 </button>
               </div>
             )}
@@ -593,9 +593,9 @@ export default function Schedule() {
             <Dialog open={productGalleryOpen} onOpenChange={setProductGalleryOpen}>
               <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
-                  <DialogTitle>Select Product Media</DialogTitle>
+                  <DialogTitle>Seleccionar Medios del Producto</DialogTitle>
                   <DialogDescription>
-                    Choose a product to attach its media to your post
+                    Elige un producto para adjuntar sus medios a tu publicación
                   </DialogDescription>
                 </DialogHeader>
                 <ScrollArea className="max-h-80">
@@ -632,7 +632,7 @@ export default function Schedule() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                Caption
+                Texto
               </Label>
               <Button
                 variant="ghost"
@@ -641,17 +641,17 @@ export default function Schedule() {
                 onClick={() =>
                   toast({
                     title: 'AI Studio',
-                    description: 'AI caption generation will be available in AI Studio section.',
+                    description: 'La generación de textos con IA estará disponible en la sección AI Studio.',
                   })
                 }
               >
                 <Sparkles className="size-3" />
-                Generate with AI
+                Generar con IA
               </Button>
             </div>
             <div className="relative">
               <Textarea
-                placeholder="Write your caption here... ✨"
+                placeholder="Escribe tu texto aquí... ✨"
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
                 rows={4}
@@ -680,7 +680,7 @@ export default function Schedule() {
               <div className="relative flex-1">
                 <Hash className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
-                  placeholder="Add hashtag (press Enter)"
+                  placeholder="Agregar hashtag (presiona Enter)"
                   value={hashtagInput}
                   onChange={(e) => setHashtagInput(e.target.value)}
                   onKeyDown={handleHashtagKeyDown}
@@ -722,7 +722,7 @@ export default function Schedule() {
             {/* Quick insert from hashtag sets */}
             {hashtagSets.length > 0 && (
               <div className="flex items-center gap-2 pt-1">
-                <span className="text-[11px] text-muted-foreground">Quick insert:</span>
+                <span className="text-[11px] text-muted-foreground">Inserción rápida:</span>
                 <div className="flex flex-wrap gap-1.5">
                   {hashtagSets.map((set) => (
                     <button
@@ -742,12 +742,12 @@ export default function Schedule() {
           {/* ── Schedule Settings ── */}
           <div className="space-y-3">
             <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-              Schedule
+              Programación
             </Label>
             <div className="flex flex-wrap items-end gap-3">
               {/* Date picker */}
               <div className="space-y-1">
-                <span className="text-[11px] text-muted-foreground">Date</span>
+                <span className="text-[11px] text-muted-foreground">Fecha</span>
                 <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                   <PopoverTrigger asChild>
                     <Button
@@ -758,7 +758,7 @@ export default function Schedule() {
                       )}
                     >
                       <CalendarIcon className="size-4" />
-                      {scheduledDate ? format(scheduledDate, 'MMM d, yyyy') : 'Pick a date'}
+                      {scheduledDate ? format(scheduledDate, 'MMM d, yyyy') : 'Selecciona fecha'}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -779,7 +779,7 @@ export default function Schedule() {
               {/* Time picker */}
               <div className="flex items-end gap-1.5">
                 <div className="space-y-1">
-                  <span className="text-[11px] text-muted-foreground">Hour</span>
+                  <span className="text-[11px] text-muted-foreground">Hora</span>
                   <Select value={scheduledHour} onValueChange={setScheduledHour}>
                     <SelectTrigger className="w-16">
                       <SelectValue />
@@ -842,14 +842,14 @@ export default function Schedule() {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Repeat className="size-4 text-muted-foreground" />
-                <Label className="text-sm font-medium">Recurring Post</Label>
+                <Label className="text-sm font-medium">Publicación Recurrente</Label>
               </div>
               <Switch checked={isRecurring} onCheckedChange={setIsRecurring} />
             </div>
             {isRecurring && (
               <div className="flex flex-wrap items-end gap-3 pt-1">
                 <div className="space-y-1">
-                  <span className="text-[11px] text-muted-foreground">Repeat</span>
+                  <span className="text-[11px] text-muted-foreground">Repetir</span>
                   <Select
                     value={recurrence}
                     onValueChange={(v) => setRecurrence(v as 'daily' | 'weekly' | 'monthly')}
@@ -858,14 +858,14 @@ export default function Schedule() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="daily">Daily</SelectItem>
-                      <SelectItem value="weekly">Weekly</SelectItem>
-                      <SelectItem value="monthly">Monthly</SelectItem>
+                      <SelectItem value="daily">Diario</SelectItem>
+                      <SelectItem value="weekly">Semanal</SelectItem>
+                      <SelectItem value="monthly">Mensual</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-1">
-                  <span className="text-[11px] text-muted-foreground">End Date</span>
+                  <span className="text-[11px] text-muted-foreground">Fecha de Fin</span>
                   <Popover open={endCalendarOpen} onOpenChange={setEndCalendarOpen}>
                     <PopoverTrigger asChild>
                       <Button
@@ -876,7 +876,7 @@ export default function Schedule() {
                         )}
                       >
                         <CalendarIcon className="size-4" />
-                        {recurringEndDate ? format(recurringEndDate, 'MMM d, yyyy') : 'Pick end date'}
+                        {recurringEndDate ? format(recurringEndDate, 'MMM d, yyyy') : 'Selecciona fecha de fin'}
                       </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
@@ -905,7 +905,7 @@ export default function Schedule() {
               className="gap-2 rounded-lg rose-gold-gradient text-white shadow-md hover:opacity-90"
             >
               <Send className="size-4" />
-              {editingPostId ? 'Update Schedule' : 'Schedule Post'}
+              {editingPostId ? 'Actualizar Programación' : 'Programar Publicación'}
             </Button>
             <Button
               variant="secondary"
@@ -914,12 +914,12 @@ export default function Schedule() {
               className="gap-2 rounded-lg"
             >
               <Save className="size-4" />
-              Save as Draft
+              Guardar como Borrador
             </Button>
             {editingPostId && (
               <Button variant="ghost" onClick={resetForm} className="gap-2">
                 <X className="size-4" />
-                Cancel
+                Cancelar
               </Button>
             )}
           </div>
@@ -929,9 +929,9 @@ export default function Schedule() {
       {/* ═══ POST QUEUE ═══ */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold tracking-tight">Post Queue</h2>
+          <h2 className="text-lg font-semibold tracking-tight">Cola de Publicaciones</h2>
           <span className="text-xs text-muted-foreground">
-            {filteredPosts.length} post{filteredPosts.length !== 1 ? 's' : ''}
+            {filteredPosts.length} publicación{filteredPosts.length !== 1 ? 'es' : ''}
           </span>
         </div>
 
@@ -939,23 +939,23 @@ export default function Schedule() {
         <Tabs value={activeFilter} onValueChange={setActiveFilter}>
           <TabsList className="h-9 bg-muted/50 p-0.5">
             <TabsTrigger value="all" className="h-8 text-xs">
-              All
+              Todas
             </TabsTrigger>
             <TabsTrigger value="scheduled" className="gap-1 text-xs">
               <Clock className="size-3" />
-              Scheduled
+              Programadas
             </TabsTrigger>
             <TabsTrigger value="published" className="gap-1 text-xs">
               <CheckCircle2 className="size-3" />
-              Published
+              Publicadas
             </TabsTrigger>
             <TabsTrigger value="draft" className="gap-1 text-xs">
               <Timer className="size-3" />
-              Draft
+              Borrador
             </TabsTrigger>
             <TabsTrigger value="failed" className="gap-1 text-xs">
               <AlertCircle className="size-3" />
-              Failed
+              Fallidas
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -967,11 +967,11 @@ export default function Schedule() {
               <div className="flex size-14 items-center justify-center rounded-full bg-muted">
                 <ImageIcon className="size-6 text-muted-foreground" />
               </div>
-              <p className="mt-3 text-sm font-medium text-muted-foreground">No posts found</p>
+              <p className="mt-3 text-sm font-medium text-muted-foreground">No se encontraron publicaciones</p>
               <p className="text-xs text-muted-foreground">
                 {activeFilter === 'all'
-                  ? 'Schedule your first post above'
-                  : `No ${activeFilter} posts yet`}
+                  ? 'Programa tu primera publicación arriba'
+                  : `Sin publicaciones ${activeFilter} aún`}
               </p>
             </CardContent>
           </Card>
@@ -1047,7 +1047,7 @@ export default function Schedule() {
                             ))}
                             {post.hashtags.length > 4 && (
                               <span className="text-[10px] text-muted-foreground">
-                                +{post.hashtags.length - 4} more
+                                +{post.hashtags.length - 4} más
                               </span>
                             )}
                           </div>
@@ -1105,19 +1105,19 @@ export default function Schedule() {
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Delete Scheduled Post</DialogTitle>
+            <DialogTitle>Eliminar Publicación Programada</DialogTitle>
             <DialogDescription>
-              This action cannot be undone. The scheduled post will be permanently removed from your
-              queue.
+              Esta acción no se puede deshacer. La publicación programada será eliminada permanentemente
+              de tu cola.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex gap-2 sm:justify-start">
             <Button variant="secondary" onClick={() => setDeleteDialogOpen(false)}>
-              Cancel
+              Cancelar
             </Button>
             <Button variant="destructive" onClick={handleDelete}>
               <Trash2 className="mr-1 size-4" />
-              Delete Post
+              Eliminar Publicación
             </Button>
           </DialogFooter>
         </DialogContent>

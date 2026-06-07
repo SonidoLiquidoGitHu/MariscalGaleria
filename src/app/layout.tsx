@@ -14,9 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ARGENTI — 925 Silver Gallery",
-  description: "Elegant 925 silver jewelry gallery with auto-posting, AI content generation, and social media management for Instagram and Facebook.",
-  keywords: ["925 Silver", "Jewelry Gallery", "Social Media", "Auto-Post", "Instagram", "Facebook", "Silver Jewelry"],
+  title: "Galería Mariscal — Joyería de Autor, Plata 925, Zacatecas México",
+  description: "Galería Mariscal — Joyería de autor, plata 925, Zacatecas México. Galería elegante de joyería en plata 925 con publicaciones automáticas, generación de contenido con IA y gestión de redes sociales para Instagram y Facebook.",
+  keywords: ["plata 925", "joyería de autor", "Zacatecas", "México", "galería de joyería", "redes sociales", "publicación automática", "Instagram", "Facebook"],
   icons: {
     icon: "https://z-cdn.chatglm.cn/z-ai/static/logo.svg",
   },
@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="es" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
       >

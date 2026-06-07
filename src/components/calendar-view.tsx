@@ -52,7 +52,7 @@ import { Separator } from '@/components/ui/separator'
 const DEMO_CALENDAR_POSTS: ScheduledPost[] = [
   {
     id: 'cal-1',
-    caption: 'Embrace the moonlight with our Celestial Moon Ring. Handcrafted 925 silver that captures the essence of nighttime elegance.',
+    caption: 'Abraza la luz de la luna con nuestro Anillo Luna Celestial. Artesanal en plata 925 que captura la esencia de la elegancia nocturna. — joyería de autor, plata 925, Zacatecas México',
     platform: 'instagram',
     media: ['https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=400&fit=crop'],
     scheduledAt: new Date(Date.now() + 3 * 60 * 60 * 1000).toISOString(),
@@ -63,7 +63,7 @@ const DEMO_CALENDAR_POSTS: ScheduledPost[] = [
   },
   {
     id: 'cal-2',
-    caption: 'Layer up this season with our Whisper Chain Necklace. Delicate meets bold in every link.',
+    caption: 'Acompaña esta temporada con nuestro Collar Cadena Susurro. Lo delicado se encuentra con lo audaz en cada eslabón. — joyería de autor, plata 925, Zacatecas México',
     platform: 'both',
     media: ['https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=400&fit=crop'],
     scheduledAt: new Date(Date.now() + 26 * 60 * 60 * 1000).toISOString(),
@@ -75,7 +75,7 @@ const DEMO_CALENDAR_POSTS: ScheduledPost[] = [
   },
   {
     id: 'cal-3',
-    caption: 'Our Ethereal Cuff Bracelet just dropped. Polished 925 silver with organic flowing design.',
+    caption: 'Nuestra Pulsera Cuff Etérea acaba de llegar. Plata 925 pulida con diseño orgánico fluido. — joyería de autor, plata 925, Zacatecas México',
     platform: 'facebook',
     media: ['https://images.unsplash.com/photo-1602751584552-8ba73aad10e1?w=400&h=400&fit=crop'],
     scheduledAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
@@ -87,7 +87,7 @@ const DEMO_CALENDAR_POSTS: ScheduledPost[] = [
   },
   {
     id: 'cal-4',
-    caption: 'Coming soon: Drop Crystal Earrings that redefine elegance. Stay tuned for the launch.',
+    caption: 'Próximamente: Aretes Gota de Cristal que redefinen la elegancia. — joyería de autor, plata 925, Zacatecas México',
     platform: 'instagram',
     media: ['https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop'],
     scheduledAt: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
@@ -97,7 +97,7 @@ const DEMO_CALENDAR_POSTS: ScheduledPost[] = [
   },
   {
     id: 'cal-5',
-    caption: 'New collection alert! Infinity Wrap Ring now available. Swipe to see details.',
+    caption: '¡Alerta de nueva colección! Anillo Infinito ahora disponible. — joyería de autor, plata 925, Zacatecas México',
     platform: 'instagram',
     media: ['https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=400&h=400&fit=crop'],
     scheduledAt: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(),
@@ -108,7 +108,7 @@ const DEMO_CALENDAR_POSTS: ScheduledPost[] = [
   },
   {
     id: 'cal-6',
-    caption: 'Riviera Choker – the statement piece your collection needs. 925 silver, interlocking geometry.',
+    caption: 'Gargantilla Riviera — la pieza statement que tu colección necesita. Plata 925, geometría entrelazada. — joyería de autor, plata 925, Zacatecas México',
     platform: 'both',
     media: ['https://images.unsplash.com/photo-1573408301185-9146fe634ad0?w=400&h=400&fit=crop'],
     scheduledAt: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
@@ -119,7 +119,7 @@ const DEMO_CALENDAR_POSTS: ScheduledPost[] = [
   },
   {
     id: 'cal-7',
-    caption: 'Wave Bangle Set – stacking perfection in brushed silver.',
+    caption: 'Set Pulseras Onda — perfección apilable en plata cepillada. — joyería de autor, plata 925, Zacatecas México',
     platform: 'facebook',
     media: ['https://images.unsplash.com/photo-1515562141589-67f0d569b6f5?w=400&h=400&fit=crop'],
     scheduledAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString(),
@@ -131,7 +131,7 @@ const DEMO_CALENDAR_POSTS: ScheduledPost[] = [
   },
   {
     id: 'cal-8',
-    caption: 'Classic Pearl Studs on 925 silver posts – timeless elegance for every day.',
+    caption: 'Perlas clásicas sobre postes de plata 925 — elegancia atemporal para cada día. — joyería de autor, plata 925, Zacatecas México',
     platform: 'instagram',
     media: ['https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop'],
     scheduledAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
@@ -142,7 +142,7 @@ const DEMO_CALENDAR_POSTS: ScheduledPost[] = [
   },
   {
     id: 'cal-9',
-    caption: 'Behind the scenes: Handcrafting our signature Celestial Moon Ring.',
+    caption: 'Detrás de escena: Elaboración artesanal de nuestro Anillo Luna Celestial. — joyería de autor, plata 925, Zacatecas México',
     platform: 'instagram',
     media: ['https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=400&fit=crop'],
     scheduledAt: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000).toISOString(),
@@ -153,7 +153,7 @@ const DEMO_CALENDAR_POSTS: ScheduledPost[] = [
   },
   {
     id: 'cal-10',
-    caption: 'Weekend sparkle: Our Drop Crystal Earrings are the perfect weekend companion.',
+    caption: 'Brillo de fin de semana: Nuestros Aretes Gota de Cristal son el compañero perfecto. — joyería de autor, plata 925, Zacatecas México',
     platform: 'both',
     media: ['https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop'],
     scheduledAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
@@ -180,19 +180,19 @@ function PlatformIcon({ platform, className }: { platform: string; className?: s
 // ─── Status Badge ───────────────────────────────────────────────────────────────
 function StatusBadge({ status }: { status: ScheduledPost['status'] }) {
   const config = {
-    draft: { label: 'Draft', className: 'bg-gray-100 text-gray-600 hover:bg-gray-100', icon: Timer },
+    draft: { label: 'Borrador', className: 'bg-gray-100 text-gray-600 hover:bg-gray-100', icon: Timer },
     scheduled: {
-      label: 'Scheduled',
+      label: 'Programada',
       className: 'bg-amber-50 text-amber-700 hover:bg-amber-50 border-amber-200',
       icon: Clock,
     },
     published: {
-      label: 'Published',
+      label: 'Publicada',
       className: 'bg-emerald-50 text-emerald-700 hover:bg-emerald-50 border-emerald-200',
       icon: CheckCircle2,
     },
     failed: {
-      label: 'Failed',
+      label: 'Fallida',
       className: 'bg-red-50 text-red-600 hover:bg-red-50 border-red-200',
       icon: AlertCircle,
     },
@@ -219,7 +219,7 @@ function PlatformBadge({ platform }: { platform: ScheduledPost['platform'] }) {
       className: 'bg-blue-50 text-blue-700 border-blue-200',
     },
     both: {
-      label: 'Both',
+      label: 'Ambas',
       className: 'bg-gradient-to-r from-blue-50 to-pink-50 text-indigo-700 border-indigo-200',
     },
   }[platform]
@@ -259,7 +259,7 @@ function CalendarDot({ platform }: { platform: ScheduledPost['platform'] }) {
 }
 
 // ─── Day Names ──────────────────────────────────────────────────────────────────
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const DAY_NAMES = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
 
 // ─── Animation Variants ─────────────────────────────────────────────────────────
 const containerVariants = {
@@ -411,10 +411,10 @@ export default function CalendarView() {
       >
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-            Content <span className="text-rose-gold">Calendar</span>
+            Calendario de <span className="text-rose-gold">Contenido</span>
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            Visual overview of your posting schedule
+            Vista general visual de tu programación de publicaciones
           </p>
         </div>
 
@@ -427,7 +427,7 @@ export default function CalendarView() {
               </div>
               <div>
                 <p className="text-lg font-bold leading-none">{monthStats.total}</p>
-                <p className="text-[11px] text-muted-foreground">This Month</p>
+                <p className="text-[11px] text-muted-foreground">Este Mes</p>
               </div>
             </CardContent>
           </Card>
@@ -438,7 +438,7 @@ export default function CalendarView() {
               </div>
               <div>
                 <p className="text-lg font-bold leading-none">{monthStats.published}</p>
-                <p className="text-[11px] text-muted-foreground">Published</p>
+                <p className="text-[11px] text-muted-foreground">Publicadas</p>
               </div>
             </CardContent>
           </Card>
@@ -449,7 +449,7 @@ export default function CalendarView() {
               </div>
               <div>
                 <p className="text-lg font-bold leading-none">{monthStats.scheduled}</p>
-                <p className="text-[11px] text-muted-foreground">Scheduled</p>
+                <p className="text-[11px] text-muted-foreground">Programadas</p>
               </div>
             </CardContent>
           </Card>
@@ -482,7 +482,7 @@ export default function CalendarView() {
                     onClick={goToToday}
                     className="h-8 px-3 text-xs font-medium"
                   >
-                    Today
+                    Hoy
                   </Button>
                   <Button
                     variant="outline"
@@ -600,7 +600,7 @@ export default function CalendarView() {
                       background: 'linear-gradient(135deg, #1877F2 50%, #e6683c 50%)',
                     }}
                   />
-                  <span>Both</span>
+                  <span>Ambas</span>
                 </div>
               </div>
             </CardContent>
@@ -616,10 +616,10 @@ export default function CalendarView() {
                 <div className="flex size-7 items-center justify-center rounded-md rose-gold-gradient">
                   <Clock className="size-4 text-white" />
                 </div>
-                <CardTitle className="text-base font-semibold">Upcoming</CardTitle>
+                <CardTitle className="text-base font-semibold">Próximas</CardTitle>
               </div>
               <CardDescription className="text-xs">
-                Next scheduled posts
+                Próximas publicaciones programadas
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-0">
@@ -629,10 +629,10 @@ export default function CalendarView() {
                     <CalendarIcon className="size-5 text-muted-foreground" />
                   </div>
                   <p className="mt-2 text-sm font-medium text-muted-foreground">
-                    No upcoming posts
+                    No hay publicaciones próximas
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    Schedule a post to see it here
+                    Programa una publicación para verla aquí
                   </p>
                 </div>
               ) : (
@@ -705,7 +705,7 @@ export default function CalendarView() {
                   <BarChart3 className="size-4 text-rose-gold" />
                 </div>
                 <CardTitle className="text-base font-semibold">
-                  {format(currentMonth, 'MMM')} Stats
+                  {format(currentMonth, 'MMM')} Estadísticas
                 </CardTitle>
               </div>
             </CardHeader>
@@ -739,13 +739,13 @@ export default function CalendarView() {
                 <div className="flex items-center gap-2">
                   <TrendingUp className="size-4 text-muted-foreground" />
                   <span className="text-sm font-medium text-foreground">
-                    Published vs Scheduled
+                    Publicadas vs Programadas
                   </span>
                 </div>
                 <div className="space-y-1.5">
                   {/* Published bar */}
                   <div className="flex items-center gap-2">
-                    <span className="w-16 text-xs text-muted-foreground">Published</span>
+                    <span className="w-16 text-xs text-muted-foreground">Publicadas</span>
                     <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
@@ -766,7 +766,7 @@ export default function CalendarView() {
 
                   {/* Scheduled bar */}
                   <div className="flex items-center gap-2">
-                    <span className="w-16 text-xs text-muted-foreground">Scheduled</span>
+                    <span className="w-16 text-xs text-muted-foreground">Programadas</span>
                     <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
@@ -800,7 +800,7 @@ export default function CalendarView() {
               {selectedDay && format(selectedDay, 'EEEE, MMMM d, yyyy')}
             </DialogTitle>
             <DialogDescription>
-              {selectedDayPosts.length} post{selectedDayPosts.length !== 1 ? 's' : ''} scheduled
+              {selectedDayPosts.length} publicacione{selectedDayPosts.length !== 1 ? 's' : ''} programada{selectedDayPosts.length !== 1 ? 's' : ''}
             </DialogDescription>
           </DialogHeader>
 
@@ -878,7 +878,7 @@ export default function CalendarView() {
                               className="h-7 gap-1.5 px-2 text-xs text-muted-foreground hover:text-rose-gold"
                             >
                               <Pencil className="size-3" />
-                              Edit
+                              Editar
                             </Button>
                             <Button
                               variant="ghost"
@@ -887,7 +887,7 @@ export default function CalendarView() {
                               className="h-7 gap-1.5 px-2 text-xs text-muted-foreground hover:text-destructive"
                             >
                               <Trash2 className="size-3" />
-                              Delete
+                              Eliminar
                             </Button>
                           </div>
                         </div>

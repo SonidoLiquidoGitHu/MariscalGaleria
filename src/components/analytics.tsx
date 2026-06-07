@@ -211,8 +211,8 @@ export default function Analytics() {
         rank: i + 1,
         caption:
           d.platform === 'instagram'
-            ? `Silver jewelry post — ${d.date}`
-            : `Jewelry showcase — ${d.date}`,
+            ? `Publicación de joyería de plata — ${d.date}`
+            : `Escaparate de joyería — ${d.date}`,
         platform: d.platform,
         likes: d.likes,
         comments: d.comments,
@@ -223,14 +223,14 @@ export default function Analytics() {
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr)
-    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    return d.toLocaleDateString('es-MX', { month: 'short', day: 'numeric' })
   }
 
   const metricCards = [
     {
       icon: Eye,
       value: formatNumber(totalReach),
-      label: 'Total Reach',
+      label: 'Alcance Total',
       trend: trendPercent,
       bgClass: 'bg-rose-100 dark:bg-rose-950/40',
       iconColor: ROSE_GOLD,
@@ -238,7 +238,7 @@ export default function Analytics() {
     {
       icon: Heart,
       value: `${engagementRate.toFixed(1)}%`,
-      label: 'Engagement Rate',
+      label: 'Tasa de Interacción',
       trend: trendPercent * 0.6,
       bgClass: 'bg-pink-100 dark:bg-pink-950/40',
       iconColor: ROSE_GOLD,
@@ -246,7 +246,7 @@ export default function Analytics() {
     {
       icon: ThumbsUp,
       value: formatNumber(totalLikes),
-      label: 'Total Likes',
+      label: 'Total de Me Gusta',
       trend: trendPercent * 0.8,
       bgClass: 'bg-amber-100 dark:bg-amber-950/40',
       iconColor: CHAMPAGNE,
@@ -254,7 +254,7 @@ export default function Analytics() {
     {
       icon: Send,
       value: formatNumber(publishedPosts),
-      label: 'Posts Published',
+      label: 'Publicaciones Realizadas',
       trend: 0,
       bgClass: 'bg-stone-100 dark:bg-stone-900/40',
       iconColor: SILVER,
@@ -272,10 +272,10 @@ export default function Analytics() {
       >
         <div>
           <h2 className="text-3xl font-bold tracking-tight">
-            <span style={{ color: ROSE_GOLD }}>Analytics</span>
+            <span style={{ color: ROSE_GOLD }}>Analíticas</span>
           </h2>
           <p className="mt-1 text-muted-foreground">
-            Track your social media performance
+            Monitorea el rendimiento de tus redes sociales
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -290,13 +290,13 @@ export default function Analytics() {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                Last {days} Days
+                Últimos {days} Días
               </button>
             ))}
           </div>
           <Button variant="outline" size="sm" className="gap-1.5">
             <Download className="size-3.5" />
-            Export
+            Exportar
           </Button>
         </div>
       </motion.div>
@@ -363,9 +363,9 @@ export default function Analytics() {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Engagement Over Time</CardTitle>
+            <CardTitle className="text-lg">Interacción en el Tiempo</CardTitle>
             <CardDescription>
-              Likes, comments, and shares across all platforms
+              Me gusta, comentarios y compartidos en todas las plataformas
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -416,7 +416,7 @@ export default function Analytics() {
                   <Area
                     type="monotone"
                     dataKey="likes"
-                    name="Likes"
+                    name="Me gusta"
                     stroke={ROSE_GOLD}
                     strokeWidth={2.5}
                     fill="url(#gradientLikes)"
@@ -426,7 +426,7 @@ export default function Analytics() {
                   <Area
                     type="monotone"
                     dataKey="comments"
-                    name="Comments"
+                    name="Comentarios"
                     stroke={SILVER}
                     strokeWidth={2.5}
                     fill="url(#gradientComments)"
@@ -436,7 +436,7 @@ export default function Analytics() {
                   <Area
                     type="monotone"
                     dataKey="shares"
-                    name="Shares"
+                    name="Compartidos"
                     stroke={CHAMPAGNE}
                     strokeWidth={2.5}
                     fill="url(#gradientShares)"
@@ -470,25 +470,25 @@ export default function Analytics() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Likes
+                    Me gusta
                   </p>
                   <p className="text-xl font-bold">{formatNumber(instagramData.likes)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Comments
+                    Comentarios
                   </p>
                   <p className="text-xl font-bold">{formatNumber(instagramData.comments)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Shares
+                    Compartidos
                   </p>
                   <p className="text-xl font-bold">{formatNumber(instagramData.shares)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Reach
+                    Alcance
                   </p>
                   <p className="text-xl font-bold">{formatNumber(instagramData.reach)}</p>
                 </div>
@@ -497,10 +497,10 @@ export default function Analytics() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={[
-                      { metric: 'Likes', value: instagramData.likes },
-                      { metric: 'Comments', value: instagramData.comments },
-                      { metric: 'Shares', value: instagramData.shares },
-                      { metric: 'Reach', value: instagramData.reach / 10 },
+                      { metric: 'Me gusta', value: instagramData.likes },
+                      { metric: 'Comentarios', value: instagramData.comments },
+                      { metric: 'Compartidos', value: instagramData.shares },
+                      { metric: 'Alcance', value: instagramData.reach / 10 },
                     ]}
                     margin={{ top: 5, right: 5, left: -20, bottom: 5 }}
                   >
@@ -550,25 +550,25 @@ export default function Analytics() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Likes
+                    Me gusta
                   </p>
                   <p className="text-xl font-bold">{formatNumber(facebookData.likes)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Comments
+                    Comentarios
                   </p>
                   <p className="text-xl font-bold">{formatNumber(facebookData.comments)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Shares
+                    Compartidos
                   </p>
                   <p className="text-xl font-bold">{formatNumber(facebookData.shares)}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
-                    Reach
+                    Alcance
                   </p>
                   <p className="text-xl font-bold">{formatNumber(facebookData.reach)}</p>
                 </div>
@@ -577,10 +577,10 @@ export default function Analytics() {
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart
                     data={[
-                      { metric: 'Likes', value: facebookData.likes },
-                      { metric: 'Comments', value: facebookData.comments },
-                      { metric: 'Shares', value: facebookData.shares },
-                      { metric: 'Reach', value: facebookData.reach / 10 },
+                      { metric: 'Me gusta', value: facebookData.likes },
+                      { metric: 'Comentarios', value: facebookData.comments },
+                      { metric: 'Compartidos', value: facebookData.shares },
+                      { metric: 'Alcance', value: facebookData.reach / 10 },
                     ]}
                     margin={{ top: 5, right: 5, left: -20, bottom: 5 }}
                   >
@@ -621,9 +621,9 @@ export default function Analytics() {
       >
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Top Performing Posts</CardTitle>
+            <CardTitle className="text-lg">Publicaciones con Mejor Rendimiento</CardTitle>
             <CardDescription>
-              Your highest engagement content in the selected period
+              Tu contenido con mayor interacción en el período seleccionado
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -631,11 +631,11 @@ export default function Analytics() {
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[40px]">#</TableHead>
-                  <TableHead>Post</TableHead>
-                  <TableHead>Platform</TableHead>
-                  <TableHead className="text-right">Likes</TableHead>
-                  <TableHead className="text-right">Comments</TableHead>
-                  <TableHead className="text-right">Reach</TableHead>
+                  <TableHead>Publicación</TableHead>
+                  <TableHead>Plataforma</TableHead>
+                  <TableHead className="text-right">Me gusta</TableHead>
+                  <TableHead className="text-right">Comentarios</TableHead>
+                  <TableHead className="text-right">Alcance</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

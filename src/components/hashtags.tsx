@@ -44,12 +44,12 @@ import { useToast } from '@/hooks/use-toast'
 
 const CATEGORIES = [
   { value: 'general', label: 'General' },
-  { value: 'luxury', label: 'Luxury' },
-  { value: 'rings', label: 'Rings' },
-  { value: 'necklaces', label: 'Necklaces' },
-  { value: 'bracelets', label: 'Bracelets' },
-  { value: 'earrings', label: 'Earrings' },
-  { value: 'trending', label: 'Trending' },
+  { value: 'luxury', label: 'Lujo' },
+  { value: 'rings', label: 'Anillos' },
+  { value: 'necklaces', label: 'Collares' },
+  { value: 'bracelets', label: 'Pulseras' },
+  { value: 'earrings', label: 'Aretes' },
+  { value: 'trending', label: 'Tendencias' },
 ]
 
 const TRENDING_SUGGESTIONS = [
@@ -105,7 +105,7 @@ export default function Hashtags() {
     if (!tag) return
     const formatted = tag.startsWith('#') ? tag : `#${tag}`
     if (newHashtags.includes(formatted)) {
-      toast({ title: 'Duplicate', description: 'This hashtag is already added.' })
+      toast({ title: 'Duplicado', description: 'Este hashtag ya fue agregado.' })
       return
     }
     setNewHashtags((prev) => [...prev, formatted])
@@ -126,11 +126,11 @@ export default function Hashtags() {
   // Save new set
   const handleSaveSet = () => {
     if (!newName.trim()) {
-      toast({ title: 'Name required', description: 'Please enter a name for this set.' })
+      toast({ title: 'Nombre requerido', description: 'Por favor ingresa un nombre para este set.' })
       return
     }
     if (newHashtags.length === 0) {
-      toast({ title: 'Hashtags required', description: 'Add at least one hashtag.' })
+      toast({ title: 'Hashtags requeridos', description: 'Agrega al menos un hashtag.' })
       return
     }
     addHashtagSet({
@@ -140,7 +140,7 @@ export default function Hashtags() {
       category: newCategory,
       usageCount: 0,
     })
-    toast({ title: 'Set created!', description: `"${newName}" has been saved.` })
+    toast({ title: '¡Set creado!', description: `"${newName}" ha sido guardado.` })
     setNewName('')
     setNewCategory('general')
     setNewHashtags([])
@@ -152,22 +152,22 @@ export default function Hashtags() {
   const handleCopyAll = async (hashtags: string[], name: string) => {
     try {
       await navigator.clipboard.writeText(hashtags.join(' '))
-      toast({ title: 'Copied!', description: `${hashtags.length} hashtags from "${name}" copied to clipboard.` })
+      toast({ title: '¡Copiado!', description: `${hashtags.length} hashtags de "${name}" copiados al portapapeles.` })
     } catch {
-      toast({ title: 'Copy failed', description: 'Could not copy to clipboard.' })
+      toast({ title: 'Error al copiar', description: 'No se pudo copiar al portapapeles.' })
     }
   }
 
   // Use in post
   const handleUseInPost = (name: string) => {
-    toast({ title: 'Hashtags added', description: `Hashtags from "${name}" added to post composer.` })
+    toast({ title: 'Hashtags agregados', description: `Hashtags de "${name}" agregados al compositor de publicaciones.` })
   }
 
   // Delete set
   const handleConfirmDelete = (id: string) => {
     deleteHashtagSet(id)
     setDeleteTarget(null)
-    toast({ title: 'Set deleted', description: 'The hashtag set has been removed.' })
+    toast({ title: 'Set eliminado', description: 'El set de hashtags ha sido eliminado.' })
   }
 
   // Add trending tag to new set form
@@ -176,7 +176,7 @@ export default function Hashtags() {
     if (!newHashtags.includes(tag)) {
       setNewHashtags((prev) => [...prev, tag])
     }
-    toast({ title: 'Tag added', description: `${tag} added to your new set.` })
+    toast({ title: 'Etiqueta agregada', description: `${tag} agregada a tu nuevo set.` })
   }
 
   const getCategoryLabel = (value?: string) => {
@@ -189,10 +189,10 @@ export default function Hashtags() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">
-            <span className="text-rose-gold">Hashtag</span> Manager
+            <span className="text-rose-gold">Gestor de</span> Hashtags
           </h2>
           <p className="text-muted-foreground text-sm mt-1">
-            Organize and reuse your best hashtags
+            Organiza y reutiliza tus mejores hashtags
           </p>
         </div>
         <Button
@@ -200,7 +200,7 @@ export default function Hashtags() {
           className="rose-gold-gradient text-white shadow-md hover:opacity-90 transition-opacity"
         >
           {showForm ? <ChevronUp className="size-4" /> : <Plus className="size-4" />}
-          {showForm ? 'Cancel' : 'New Set'}
+          {showForm ? 'Cancelar' : 'Nuevo Set'}
         </Button>
       </div>
 
@@ -217,7 +217,7 @@ export default function Hashtags() {
                 <HashIcon className="size-5 text-rose-gold" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground font-medium">Total Hashtag Sets</p>
+                <p className="text-xs text-muted-foreground font-medium">Total de Sets de Hashtags</p>
                 <p className="text-xl font-bold">{totalSets}</p>
               </div>
             </CardContent>
@@ -234,7 +234,7 @@ export default function Hashtags() {
                 <Sparkles className="size-5 text-rose-gold" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground font-medium">Unique Hashtags</p>
+                <p className="text-xs text-muted-foreground font-medium">Hashtags Únicos</p>
                 <p className="text-xl font-bold">{totalUniqueHashtags}</p>
               </div>
             </CardContent>
@@ -251,7 +251,7 @@ export default function Hashtags() {
                 <Crown className="size-5 text-rose-gold" />
               </div>
               <div>
-                <p className="text-xs text-muted-foreground font-medium">Most Used Set</p>
+                <p className="text-xs text-muted-foreground font-medium">Set Más Usado</p>
                 <p className="text-xl font-bold truncate max-w-[140px]">
                   {mostUsedSet?.name ?? '—'}
                 </p>
@@ -274,24 +274,24 @@ export default function Hashtags() {
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Plus className="size-5 text-rose-gold" />
-                  Create New Set
+                  Crear Nuevo Set
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Name</label>
+                    <label className="text-sm font-medium">Nombre</label>
                     <Input
-                      placeholder="e.g. Holiday Collection"
+                      placeholder="ej. Colección Navideña"
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Category</label>
+                    <label className="text-sm font-medium">Categoría</label>
                     <Select value={newCategory} onValueChange={setNewCategory}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select category" />
+                        <SelectValue placeholder="Selecciona categoría" />
                       </SelectTrigger>
                       <SelectContent>
                         {CATEGORIES.map((cat) => (
@@ -305,10 +305,10 @@ export default function Hashtags() {
                 </div>
 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Add Hashtags</label>
+                  <label className="text-sm font-medium">Agregar Hashtags</label>
                   <div className="flex gap-2">
                     <Input
-                      placeholder="Type a hashtag and press Enter"
+                      placeholder="Escribe un hashtag y presiona Enter"
                       value={newHashtag}
                       onChange={(e) => setNewHashtag(e.target.value)}
                       onKeyDown={handleHashtagKeyDown}
@@ -354,7 +354,7 @@ export default function Hashtags() {
                   className="rose-gold-gradient text-white shadow-md hover:opacity-90 transition-opacity"
                 >
                   <Hash className="size-4" />
-                  Save Set
+                  Guardar Set
                 </Button>
               </CardContent>
             </Card>
@@ -367,9 +367,9 @@ export default function Hashtags() {
         <Card>
           <CardContent className="py-16 text-center">
             <Hash className="size-12 text-muted-foreground/30 mx-auto mb-4" />
-            <p className="text-muted-foreground font-medium">No hashtag sets yet</p>
+            <p className="text-muted-foreground font-medium">Aún no hay sets de hashtags</p>
             <p className="text-muted-foreground/70 text-sm mt-1">
-              Create your first set to get started
+              Crea tu primer set para comenzar
             </p>
           </CardContent>
         </Card>
@@ -399,7 +399,7 @@ export default function Hashtags() {
                           </Badge>
                           <Badge variant="outline" className="text-[10px]">
                             <Hash className="size-3" />
-                            {set.hashtags.length} tags
+                            {set.hashtags.length} etiquetas
                           </Badge>
                           {set.usageCount > 0 && (
                             <Badge
@@ -407,7 +407,7 @@ export default function Hashtags() {
                               className="text-[10px] bg-champagne/25 text-rose-gold border-champagne/30"
                             >
                               <BarChart3 className="size-3" />
-                              {set.usageCount} uses
+                              {set.usageCount} usos
                             </Badge>
                           )}
                         </div>
@@ -436,7 +436,7 @@ export default function Hashtags() {
                         onClick={() => handleCopyAll(set.hashtags, set.name)}
                       >
                         <Copy className="size-3" />
-                        Copy All
+                        Copiar Todo
                       </Button>
                       <Button
                         variant="outline"
@@ -445,7 +445,7 @@ export default function Hashtags() {
                         onClick={() => handleUseInPost(set.name)}
                       >
                         <Send className="size-3" />
-                        Use in Post
+                        Usar en Publicación
                       </Button>
                       <Dialog
                         open={deleteTarget === set.id}
@@ -462,16 +462,16 @@ export default function Hashtags() {
                         </DialogTrigger>
                         <DialogContent>
                           <DialogHeader>
-                            <DialogTitle>Delete &quot;{set.name}&quot;?</DialogTitle>
+                            <DialogTitle>¿Eliminar &quot;{set.name}&quot;?</DialogTitle>
                             <DialogDescription>
-                              This action cannot be undone. This hashtag set and all its{' '}
-                              {set.hashtags.length} tags will be permanently removed.
+                              Esta acción no se puede deshacer. Este set de hashtags y todas sus{' '}
+                              {set.hashtags.length} etiquetas serán eliminados permanentemente.
                             </DialogDescription>
                           </DialogHeader>
                           <DialogFooter>
                             <DialogClose asChild>
                               <Button variant="outline" size="sm">
-                                Cancel
+                                Cancelar
                               </Button>
                             </DialogClose>
                             <Button
@@ -479,7 +479,7 @@ export default function Hashtags() {
                               size="sm"
                               onClick={() => handleConfirmDelete(set.id)}
                             >
-                              Delete
+                              Eliminar
                             </Button>
                           </DialogFooter>
                         </DialogContent>
@@ -500,11 +500,11 @@ export default function Hashtags() {
           <CardTitle className="text-lg flex items-center gap-2">
             <TrendingUp className="size-5 text-rose-gold" />
             <span>
-              Trending <span className="text-rose-gold">Tags</span>
+              Etiquetas en <span className="text-rose-gold">Tendencia</span>
             </span>
           </CardTitle>
           <p className="text-xs text-muted-foreground">
-            Click any tag to add it to a new set
+            Haz clic en cualquier etiqueta para agregarla a un nuevo set
           </p>
         </CardHeader>
         <CardContent className="relative">

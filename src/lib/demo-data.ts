@@ -11,13 +11,15 @@ const SILVER_JEWELRY_IMAGES = [
   'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop',
 ]
 
+const TAGLINE = 'joyería de autor, plata 925, Zacatecas México'
+
 export const DEMO_PRODUCTS: Product[] = [
   {
     id: 'demo-1',
-    name: 'Celestial Moon Ring',
-    description: 'Handcrafted 925 silver ring with crescent moon motif and cubic zirconia accent',
-    price: 89.99,
-    category: 'rings',
+    name: 'Anillo Luna Celestial',
+    description: `Anillo artesanal en plata 925 con motivo de luna creciente y acento de circonia cúbica — ${TAGLINE}`,
+    price: 1899.99,
+    category: 'anillos',
     sku: 'RG-001',
     isFeatured: true,
     isActive: true,
@@ -26,10 +28,10 @@ export const DEMO_PRODUCTS: Product[] = [
   },
   {
     id: 'demo-2',
-    name: 'Whisper Chain Necklace',
-    description: 'Delicate silver chain necklace with minimalist pendant, perfect for layering',
-    price: 129.99,
-    category: 'necklaces',
+    name: 'Collar Cadena Susurro',
+    description: `Collar de cadena delicada en plata 925 con dije minimalista, perfecto para capas — ${TAGLINE}`,
+    price: 2499.99,
+    category: 'collares',
     sku: 'NK-002',
     isFeatured: true,
     isActive: true,
@@ -38,10 +40,10 @@ export const DEMO_PRODUCTS: Product[] = [
   },
   {
     id: 'demo-3',
-    name: 'Ethereal Cuff Bracelet',
-    description: 'Open-end cuff bracelet in polished 925 silver with organic flowing design',
-    price: 149.99,
-    category: 'bracelets',
+    name: 'Pulsera Cuff Etérea',
+    description: `Pulsera tipo cuff de punta abierta en plata 925 pulida con diseño orgánico fluido — ${TAGLINE}`,
+    price: 2899.99,
+    category: 'pulseras',
     sku: 'BR-003',
     isFeatured: true,
     isActive: true,
@@ -50,10 +52,10 @@ export const DEMO_PRODUCTS: Product[] = [
   },
   {
     id: 'demo-4',
-    name: 'Drop Crystal Earrings',
-    description: 'Elegant drop earrings featuring 925 silver setting with clear crystal drops',
-    price: 69.99,
-    category: 'earrings',
+    name: 'Aretes Gota de Cristal',
+    description: `Aretes elegantes tipo gota en montura de plata 925 con cristales transparentes — ${TAGLINE}`,
+    price: 1399.99,
+    category: 'aretes',
     sku: 'ER-004',
     isFeatured: false,
     isActive: true,
@@ -62,10 +64,10 @@ export const DEMO_PRODUCTS: Product[] = [
   },
   {
     id: 'demo-5',
-    name: 'Infinity Wrap Ring',
-    description: 'Symbolic infinity design in oxidized silver with polished highlights',
-    price: 79.99,
-    category: 'rings',
+    name: 'Anillo Infinito',
+    description: `Diseño simbólico de infinito en plata oxidada con detalles pulidos — ${TAGLINE}`,
+    price: 1599.99,
+    category: 'anillos',
     sku: 'RG-005',
     isFeatured: false,
     isActive: true,
@@ -74,10 +76,10 @@ export const DEMO_PRODUCTS: Product[] = [
   },
   {
     id: 'demo-6',
-    name: 'Riviera Choker',
-    description: 'Statement choker in 925 silver with interlocking geometric elements',
-    price: 199.99,
-    category: 'necklaces',
+    name: 'Gargantilla Riviera',
+    description: `Gargantilla statement en plata 925 con elementos geométricos entrelazados — ${TAGLINE}`,
+    price: 3699.99,
+    category: 'collares',
     sku: 'NK-006',
     isFeatured: true,
     isActive: true,
@@ -86,10 +88,10 @@ export const DEMO_PRODUCTS: Product[] = [
   },
   {
     id: 'demo-7',
-    name: 'Wave Bangle Set',
-    description: 'Set of 3 stacking bangles with wave-inspired texture in brushed silver',
-    price: 119.99,
-    category: 'bracelets',
+    name: 'Set Pulseras Onda',
+    description: `Set de 3 pulseras apilables con textura inspirada en las olas en plata cepillada — ${TAGLINE}`,
+    price: 2299.99,
+    category: 'pulseras',
     sku: 'BR-007',
     isFeatured: false,
     isActive: true,
@@ -98,10 +100,10 @@ export const DEMO_PRODUCTS: Product[] = [
   },
   {
     id: 'demo-8',
-    name: 'Pearl Stud Earrings',
-    description: 'Classic pearl studs on 925 silver posts with secure butterfly backs',
-    price: 59.99,
-    category: 'earrings',
+    name: 'Aretes Perla Clásica',
+    description: `Perlas clásicas sobre postes de plata 925 con seguros mariposa — ${TAGLINE}`,
+    price: 1199.99,
+    category: 'aretes',
     sku: 'ER-008',
     isFeatured: false,
     isActive: true,
@@ -111,10 +113,10 @@ export const DEMO_PRODUCTS: Product[] = [
 ]
 
 export const DEMO_HASHTAGS = [
-  { id: 'ht-1', name: 'Silver Essentials', hashtags: ['#925Silver', '#SilverJewelry', '#SterlingSilver', '#SilverLove', '#PureSilver', '#SilverDesign', '#SilverCraft', '#JewelryAddict'], category: 'general', usageCount: 24 },
-  { id: 'ht-2', name: 'Luxury Vibes', hashtags: ['#LuxuryJewelry', '#FineJewelry', '#ElegantStyle', '#TimelessBeauty', '#JewelryLovers', '#LuxuryLife', '#ChicJewelry', '#ClassyStyle'], category: 'luxury', usageCount: 18 },
-  { id: 'ht-3', name: 'Ring Collection', hashtags: ['#SilverRing', '#RingGame', '#RingCollection', '#PromiseRing', '#StatementRing', '#MinimalRing', '#RingStack', '#RingStyle'], category: 'rings', usageCount: 31 },
-  { id: 'ht-4', name: 'Trending Now', hashtags: ['#JewelryTrends', '#Jewelry2024', '#TrendingNow', '#MustHave', '#StyleInspo', '#OOTD', '#JewelryGram', '#InstaJewelry'], category: 'trending', usageCount: 15 },
+  { id: 'ht-1', name: 'Plata Esencial', hashtags: ['#Plata925', '#JoyeriaDePlata', '#SterlingSilver', '#Plata925Mexico', '#PlataPura', '#DiseñoPlata', '#ArtePlata', '#JoyeriaAdicta'], category: 'general', usageCount: 24 },
+  { id: 'ht-2', name: 'Vibras de Lujo', hashtags: ['#JoyeriaDeLujo', '#Finajoyeria', '#EstiloElegante', '#BellezaAtemporal', '#AmantesJoyeria', '#VidaDeLujo', '#JoyeriaChic', '#EstiloClasico'], category: 'lujo', usageCount: 18 },
+  { id: 'ht-3', name: 'Colección Anillos', hashtags: ['#AnilloPlata', '#Anillos925', '#ColeccionAnillos', '#AnilloPromesa', '#AnilloStatement', '#AnilloMinimal', '#StackAnillos', '#EstiloAnillos'], category: 'anillos', usageCount: 31 },
+  { id: 'ht-4', name: 'Tendencias', hashtags: ['#TendenciasJoyeria', '#Joyeria2025', '#TendenciaActual', '#MustHave', '#InspiracionEstilo', '#OOTD', '#JoyeriaGram', '#InstaJoyeria'], category: 'tendencias', usageCount: 15 },
 ]
 
 export const DEMO_ANALYTICS = [
@@ -135,11 +137,11 @@ export const DEMO_ANALYTICS = [
 ]
 
 export const CATEGORIES = [
-  { value: 'all', label: 'All Pieces' },
-  { value: 'rings', label: 'Rings' },
-  { value: 'necklaces', label: 'Necklaces' },
-  { value: 'bracelets', label: 'Bracelets' },
-  { value: 'earrings', label: 'Earrings' },
-  { value: 'pendants', label: 'Pendants' },
+  { value: 'all', label: 'Todas las Piezas' },
+  { value: 'anillos', label: 'Anillos' },
+  { value: 'collares', label: 'Collares' },
+  { value: 'pulseras', label: 'Pulseras' },
+  { value: 'aretes', label: 'Aretes' },
+  { value: 'dijes', label: 'Dijes' },
   { value: 'sets', label: 'Sets' },
 ]
