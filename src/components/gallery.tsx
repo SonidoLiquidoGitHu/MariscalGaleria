@@ -12,9 +12,12 @@ import {
   Gem,
   Trash2,
   X,
+  Box,
+  PenTool,
+  Palette,
 } from 'lucide-react'
-import { useAppStore, type Product } from '@/lib/store'
-import { DEMO_PRODUCTS, CATEGORIES } from '@/lib/demo-data'
+import { useAppStore, type Product, type Discipline } from '@/lib/store'
+import { DEMO_PRODUCTS, DISCIPLINES, CATEGORIES_BY_DISCIPLINE } from '@/lib/demo-data'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
@@ -27,6 +30,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+
+/* ─── Discipline icons ─── */
+const DISCIPLINE_ICONS: Record<Discipline, React.ElementType> = {
+  joyeria: Gem,
+  escultura: Box,
+  grabado: PenTool,
+  pintura: Palette,
+}
 
 /* ─── Animation variants ─── */
 
@@ -59,8 +70,13 @@ const featuredVariants = {
 
 /* ─── Helpers ─── */
 
-function categoryLabel(value: string) {
-  return CATEGORIES.find((c) => c.value === value)?.label ?? value
+function categoryLabel(discipline: Discipline, value: string) {
+  const cats = CATEGORIES_BY_DISCIPLINE[discipline]
+  return cats.find((c) => c.value === value)?.label ?? value
+}
+
+function disciplineLabel(value: Discipline) {
+  return DISCIPLINES.find((d) => d.value === value)?.label ?? value
 }
 
 function formatPrice(price?: number) {
@@ -70,7 +86,9 @@ function formatPrice(price?: number) {
 
 /* ─── Sub-components ─── */
 
-function EmptyState() {
+function EmptyState({ discipline }: { discipline: Discipline }) {
+  const Icon = DISCIPLINE_ICONS[discipline]
+  const disciplineInfo = DISCIPLINES.find((d) => d.value === discipline)
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -80,15 +98,15 @@ function EmptyState() {
     >
       <div className="relative mb-6">
         <div className="h-28 w-28 rounded-full bg-muted flex items-center justify-center">
-          <Gem className="h-12 w-12 text-rose-gold" />
+          <Icon className="h-12 w-12 text-rose-gold" />
         </div>
         <div className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-champagne flex items-center justify-center">
           <Star className="h-3 w-3 text-rose-gold" />
         </div>
       </div>
-      <h3 className="text-lg font-medium text-foreground mb-2">No se encontraron piezas</h3>
+      <h3 className="text-lg font-medium text-foreground mb-2">No se encontraron obras</h3>
       <p className="text-sm text-muted-foreground max-w-xs">
-        No encontramos joyería que coincida con tu búsqueda. Intenta ajustar los filtros o explora
+        No encontramos {disciplineInfo?.label.toLowerCase() ?? 'piezas'} que coincida con tu búsqueda. Intenta ajustar los filtros o explora
         la colección completa.
       </p>
     </motion.div>
@@ -156,7 +174,7 @@ function ProductCard({
 
           {/* Category badge – top left */}
           <Badge className="absolute top-3 left-3 bg-rose-gold text-white hover:bg-rose-gold/90 border-0 text-[10px] font-medium px-2 py-0.5 shadow-sm">
-            {categoryLabel(product.category)}
+            {categoryLabel(product.discipline, product.category)}
           </Badge>
 
           {/* Featured star – top right */}
@@ -230,7 +248,7 @@ function FeaturedCard({ product }: { product: Product }) {
           )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
           <Badge className="absolute top-3 left-3 bg-rose-gold text-white hover:bg-rose-gold/90 border-0 text-[10px] font-medium px-2 py-0.5 shadow-sm">
-            {categoryLabel(product.category)}
+            {categoryLabel(product.discipline, product.category)}
           </Badge>
           {product.isFeatured && (
             <div className="absolute top-3 right-3 h-6 w-6 rounded-full bg-champagne flex items-center justify-center shadow-sm">
@@ -268,6 +286,8 @@ export default function Gallery() {
     products,
     selectedCategory,
     setSelectedCategory,
+    selectedDiscipline,
+    setSelectedDiscipline,
     searchQuery,
     setSearchQuery,
     setProducts,
@@ -284,19 +304,23 @@ export default function Gallery() {
     }
   }, [])
 
+  // Current categories based on discipline
+  const currentCategories = CATEGORIES_BY_DISCIPLINE[selectedDiscipline]
+
   // Filter products
   const filteredProducts = useMemo(() => {
     return products
       .filter((p) => {
+        const matchesDiscipline = p.discipline === selectedDiscipline
         const matchesCategory =
           selectedCategory === 'all' || p.category === selectedCategory
         const matchesSearch =
           searchQuery.trim() === '' ||
           p.name.toLowerCase().includes(searchQuery.toLowerCase())
-        return matchesCategory && matchesSearch && p.isActive
+        return matchesDiscipline && matchesCategory && matchesSearch && p.isActive
       })
       .sort((a, b) => (a.sortOrder ?? 999) - (b.sortOrder ?? 999))
-  }, [products, selectedCategory, searchQuery])
+  }, [products, selectedDiscipline, selectedCategory, searchQuery])
 
   const featuredProducts = useMemo(() => {
     return filteredProducts.filter((p) => p.isFeatured)
@@ -314,6 +338,8 @@ export default function Gallery() {
     setDeleteDialogOpen(false)
     setDeleteTarget(null)
   }
+
+  const activeDisciplineInfo = DISCIPLINES.find((d) => d.value === selectedDiscipline)
 
   return (
     <div className="space-y-8">
@@ -334,15 +360,54 @@ export default function Gallery() {
             <span className="h-px w-12 bg-rose-gold/40" />
           </div>
           <p className="text-sm text-muted-foreground tracking-wide">
-            Colección Curada de Plata 925 — Joyería de Autor, Zacatecas México
+            Arte de Autor — Zacatecas México
           </p>
         </div>
+
+        {/* ── Discipline Tabs ── */}
+        <div className="flex gap-2 overflow-x-auto pb-1 custom-scrollbar justify-center">
+          {DISCIPLINES.map((disc) => {
+            const Icon = DISCIPLINE_ICONS[disc.value]
+            const isActive = selectedDiscipline === disc.value
+            return (
+              <button
+                key={disc.value}
+                onClick={() => setSelectedDiscipline(disc.value)}
+                className={`
+                  shrink-0 flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium transition-all duration-300
+                  ${
+                    isActive
+                      ? 'bg-rose-gold text-white shadow-lg shadow-rose-gold/25'
+                      : 'bg-secondary text-secondary-foreground hover:bg-secondary/80 hover:text-foreground'
+                  }
+                `}
+              >
+                <Icon className="h-4 w-4" />
+                {disc.label}
+              </button>
+            )
+          })}
+        </div>
+
+        {/* Discipline description */}
+        <AnimatePresence mode="wait">
+          <motion.p
+            key={selectedDiscipline}
+            initial={{ opacity: 0, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 5 }}
+            transition={{ duration: 0.2 }}
+            className="text-center text-xs text-muted-foreground tracking-widest uppercase"
+          >
+            {activeDisciplineInfo?.description}
+          </motion.p>
+        </AnimatePresence>
 
         {/* Search */}
         <div className="relative max-w-md mx-auto">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Buscar joyería..."
+            placeholder={`Buscar en ${activeDisciplineInfo?.label.toLowerCase() ?? 'colección'}...`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9 pr-9 bg-card border-border/60 focus:border-rose-gold/50 focus:ring-rose-gold/20 rounded-full h-10"
@@ -360,7 +425,7 @@ export default function Gallery() {
 
         {/* Category pills */}
         <div className="flex gap-2 overflow-x-auto pb-2 custom-scrollbar justify-start px-1">
-          {CATEGORIES.map((cat) => {
+          {currentCategories.map((cat) => {
             const isActive = selectedCategory === cat.value
             return (
               <button
@@ -395,7 +460,7 @@ export default function Gallery() {
             <div className="flex items-center gap-3">
               <Star className="h-4 w-4 text-rose-gold fill-rose-gold" />
               <h2 className="text-lg font-semibold text-foreground">
-                Piezas Destacadas
+                Obras Destacadas
               </h2>
               <div className="flex-1 h-px bg-border" />
             </div>
@@ -422,7 +487,7 @@ export default function Gallery() {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          key={`${selectedCategory}-${searchQuery}`}
+          key={`${selectedDiscipline}-${selectedCategory}-${searchQuery}`}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5"
         >
           {filteredProducts.map((product) => (
@@ -434,7 +499,7 @@ export default function Gallery() {
           ))}
         </motion.div>
       ) : (
-        <EmptyState />
+        <EmptyState discipline={selectedDiscipline} />
       )}
 
       {/* ── Delete Confirmation Dialog ── */}
@@ -443,7 +508,7 @@ export default function Gallery() {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Trash2 className="h-5 w-5 text-destructive" />
-              Eliminar Pieza
+              Eliminar Obra
             </DialogTitle>
             <DialogDescription>
               ¿Estás seguro de que deseas eliminar{' '}

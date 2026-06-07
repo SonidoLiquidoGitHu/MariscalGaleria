@@ -13,6 +13,7 @@ model Product {
   description String?
   price       Float?
   category    String   @default("rings")
+  discipline  String   @default("joyeria")
   sku         String?
   isFeatured  Boolean  @default(false)
   isActive    Boolean  @default(true)

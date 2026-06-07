@@ -26,7 +26,8 @@ import { Progress } from '@/components/ui/progress'
 import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { useToast } from '@/hooks/use-toast'
-import { useAppStore, type Product } from '@/lib/store'
+import { useAppStore, type Product, type Discipline } from '@/lib/store'
+import { DISCIPLINES, CATEGORIES_BY_DISCIPLINE } from '@/lib/demo-data'
 
 interface FilePreview {
   id: string
@@ -43,14 +44,8 @@ function formatFileSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
-const CATEGORIES = [
-  'Anillos',
-  'Collares',
-  'Pulseras',
-  'Aretes',
-  'Dijes',
-  'Sets',
-]
+const TAGLINE_JEWELRY = 'joyería de autor, plata 925, Zacatecas México'
+const TAGLINE_GENERAL = 'arte de autor, Zacatecas México'
 
 export default function Upload() {
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -62,6 +57,7 @@ export default function Upload() {
   const [progress, setProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
 
+  const [selectedUploadDiscipline, setSelectedUploadDiscipline] = useState<Discipline>('joyeria')
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -109,6 +105,8 @@ export default function Upload() {
     })
     setProgress(0)
   }, [files])
+
+  const currentUploadCategories = CATEGORIES_BY_DISCIPLINE[selectedUploadDiscipline].filter(c => c.value !== 'all')
 
   // --- Drag events ---
   const handleDragOver = useCallback(
@@ -184,12 +182,18 @@ export default function Upload() {
         if (current >= 100) {
           clearInterval(checkDone)
 
+          const tagline = selectedUploadDiscipline === 'joyeria' ? TAGLINE_JEWELRY : TAGLINE_GENERAL
+          const desc = formData.description.trim()
+            ? `${formData.description.trim()} — ${tagline}`
+            : tagline
+
           const product: Product = {
             id: Date.now().toString(),
             name: formData.name.trim(),
-            description: formData.description.trim() || undefined,
+            description: desc,
             price: formData.price ? parseFloat(formData.price) : undefined,
             category: formData.category,
+            discipline: selectedUploadDiscipline,
             sku: formData.sku.trim() || undefined,
             isFeatured: formData.isFeatured,
             isActive: true,
@@ -249,7 +253,7 @@ export default function Upload() {
           <span className="h-px w-12 bg-rose-gold/40" />
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
-          Agrega nuevas piezas a tu galería de plata
+          Agrega nuevas obras a la galería
         </p>
       </motion.div>
 
@@ -481,6 +485,30 @@ export default function Upload() {
                 />
               </div>
 
+              {/* Discipline */}
+              <div className="space-y-1.5 sm:col-span-2">
+                <Label>Disciplina <span className="text-destructive">*</span></Label>
+                <div className="flex gap-2 flex-wrap">
+                  {DISCIPLINES.map((disc) => (
+                    <button
+                      key={disc.value}
+                      type="button"
+                      onClick={() => {
+                        setSelectedUploadDiscipline(disc.value)
+                        setFormData((p) => ({ ...p, category: '' }))
+                      }}
+                      className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${
+                        selectedUploadDiscipline === disc.value
+                          ? 'bg-rose-gold text-white shadow-md shadow-rose-gold/20'
+                          : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                      }`}
+                    >
+                      {disc.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Category */}
               <div className="space-y-1.5">
                 <Label>
@@ -496,9 +524,9 @@ export default function Upload() {
                     <SelectValue placeholder="Selecciona categoría" />
                   </SelectTrigger>
                   <SelectContent>
-                    {CATEGORIES.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
+                    {currentUploadCategories.map((cat) => (
+                      <SelectItem key={cat.value} value={cat.value}>
+                        {cat.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

@@ -2,12 +2,15 @@ import { create } from 'zustand'
 
 export type Section = 'gallery' | 'upload' | 'schedule' | 'calendar' | 'analytics' | 'hashtags' | 'ai-studio' | 'admin'
 
+export type Discipline = 'joyeria' | 'escultura' | 'grabado' | 'pintura'
+
 export interface Product {
   id: string
   name: string
   description?: string
   price?: number
   category: string
+  discipline: Discipline
   sku?: string
   isFeatured: boolean
   isActive: boolean
@@ -56,6 +59,7 @@ interface AppState {
   hashtagSets: HashtagSet[]
   analytics: AnalyticsData[]
   selectedCategory: string
+  selectedDiscipline: Discipline
   searchQuery: string
   isAdminAuthenticated: boolean
 
@@ -75,6 +79,7 @@ interface AppState {
   deleteHashtagSet: (id: string) => void
   setAnalytics: (data: AnalyticsData[]) => void
   setSelectedCategory: (category: string) => void
+  setSelectedDiscipline: (discipline: Discipline) => void
   setSearchQuery: (query: string) => void
   loginAdmin: (username: string, password: string) => boolean
   logoutAdmin: () => void
@@ -91,6 +96,7 @@ export const useAppStore = create<AppState>((set) => ({
   hashtagSets: [],
   analytics: [],
   selectedCategory: 'all',
+  selectedDiscipline: 'joyeria',
   searchQuery: '',
   isAdminAuthenticated: false,
 
@@ -120,6 +126,7 @@ export const useAppStore = create<AppState>((set) => ({
   })),
   setAnalytics: (data) => set({ analytics: data }),
   setSelectedCategory: (category) => set({ selectedCategory: category }),
+  setSelectedDiscipline: (discipline) => set({ selectedDiscipline: discipline, selectedCategory: 'all' }),
   setSearchQuery: (query) => set({ searchQuery: query }),
   loginAdmin: (username, password) => {
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {

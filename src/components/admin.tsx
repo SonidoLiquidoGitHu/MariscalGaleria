@@ -80,21 +80,13 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useToast } from '@/hooks/use-toast'
-import { useAppStore, type Product } from '@/lib/store'
-import { CATEGORIES } from '@/lib/demo-data'
+import { useAppStore, type Product, type Discipline } from '@/lib/store'
+import { CATEGORIES_BY_DISCIPLINE, DISCIPLINES } from '@/lib/demo-data'
 import { cn } from '@/lib/utils'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const TAGLINE = 'joyería de autor, plata 925, Zacatecas México'
-
-const UPLOAD_CATEGORIES = [
-  'Anillos',
-  'Collares',
-  'Pulseras',
-  'Aretes',
-  'Dijes',
-  'Sets',
-]
+const TAGLINE_JEWELRY = 'joyería de autor, plata 925, Zacatecas México'
+const TAGLINE_GENERAL = 'arte de autor, Zacatecas México'
 
 // ─── File preview interface ──────────────────────────────────────────────────
 interface FilePreview {
@@ -289,7 +281,9 @@ function SortableProductRow({
     transition,
   }
 
-  const categoryLabel = CATEGORIES.find((c) => c.value === product.category)?.label ?? product.category
+  const cats = CATEGORIES_BY_DISCIPLINE[product.discipline || 'joyeria']
+  const categoryLabel = cats.find((c) => c.value === product.category)?.label ?? product.category
+  const discLabel = DISCIPLINES.find((d) => d.value === product.discipline)?.label ?? product.discipline
 
   return (
     <div
@@ -334,6 +328,9 @@ function SortableProductRow({
           {product.isFeatured && <Star className="h-3.5 w-3.5 text-rose-gold fill-rose-gold shrink-0" />}
         </div>
         <div className="flex items-center gap-2 mt-0.5">
+          <Badge className="bg-champagne/40 text-rose-gold border-0 text-[10px] px-1.5 py-0">
+            {discLabel}
+          </Badge>
           <Badge className="bg-rose-gold/10 text-rose-gold border-0 text-[10px] px-1.5 py-0">
             {categoryLabel}
           </Badge>
@@ -407,6 +404,7 @@ function AdminUpload() {
   const [isDragging, setIsDragging] = useState(false)
   const [progress, setProgress] = useState(0)
   const [isUploading, setIsUploading] = useState(false)
+  const [adminDiscipline, setAdminDiscipline] = useState<Discipline>('joyeria')
 
   const [formData, setFormData] = useState({
     name: '',
@@ -418,6 +416,8 @@ function AdminUpload() {
     isActive: true,
     videoUrl: '',
   })
+
+  const adminCategories = CATEGORIES_BY_DISCIPLINE[adminDiscipline].filter(c => c.value !== 'all')
 
   // File handlers
   const processFiles = useCallback((incoming: FileList | File[]) => {
@@ -517,9 +517,10 @@ function AdminUpload() {
         if (current >= 100) {
           clearInterval(checkDone)
 
+          const tagline = adminDiscipline === 'joyeria' ? TAGLINE_JEWELRY : TAGLINE_GENERAL
           const desc = formData.description.trim()
-            ? `${formData.description.trim()} — ${TAGLINE}`
-            : TAGLINE
+            ? `${formData.description.trim()} — ${tagline}`
+            : tagline
 
           const product: Product = {
             id: Date.now().toString(),
@@ -527,6 +528,7 @@ function AdminUpload() {
             description: desc,
             price: formData.price ? parseFloat(formData.price) : undefined,
             category: formData.category,
+            discipline: adminDiscipline,
             sku: formData.sku.trim() || undefined,
             isFeatured: formData.isFeatured,
             isActive: formData.isActive,
@@ -537,7 +539,7 @@ function AdminUpload() {
           }
 
           addProduct(product)
-          toast({ title: 'Colección actualizada', description: `"${formData.name}" ha sido agregada a tu galería de plata.` })
+          toast({ title: 'Colección actualizada', description: `"${formData.name}" ha sido agregada a la galería.` })
           setIsUploading(false)
           clearForm()
           return 0
@@ -555,8 +557,8 @@ function AdminUpload() {
           <CloudUpload className="h-5 w-5 text-rose-gold" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-foreground">Subir Nuevas Piezas</h3>
-          <p className="text-xs text-muted-foreground">Agrega piezas con múltiples archivos, video y detalles completos</p>
+          <h3 className="text-lg font-semibold text-foreground">Subir Nuevas Obras</h3>
+          <p className="text-xs text-muted-foreground">Agrega obras de cualquier disciplina con múltiples archivos, video y detalles completos</p>
         </div>
       </div>
 
@@ -696,13 +698,35 @@ function AdminUpload() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-1.5">
-                <Label htmlFor="admin-name">Nombre del Producto <span className="text-destructive">*</span></Label>
+                <Label>Disciplina <span className="text-destructive">*</span></Label>
+                <div className="flex gap-2 flex-wrap">
+                  {DISCIPLINES.map((disc) => (
+                    <button
+                      key={disc.value}
+                      type="button"
+                      onClick={() => {
+                        setAdminDiscipline(disc.value)
+                        setFormData((p) => ({ ...p, category: '' }))
+                      }}
+                      className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-300 ${
+                        adminDiscipline === disc.value
+                          ? 'bg-rose-gold text-white shadow-md shadow-rose-gold/20'
+                          : 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
+                      }`}
+                    >
+                      {disc.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="admin-name">Nombre de la Obra <span className="text-destructive">*</span></Label>
                 <Input id="admin-name" placeholder="ej. Anillo Luna Celestial" value={formData.name} onChange={(e) => setFormData((p) => ({ ...p, name: e.target.value }))} className="border-border/60 focus-visible:ring-rose-gold/30" />
               </div>
               <div className="space-y-1.5">
                 <Label htmlFor="admin-desc">Descripción</Label>
                 <Textarea id="admin-desc" placeholder="Describe la artesanía, materiales e inspiración..." rows={3} value={formData.description} onChange={(e) => setFormData((p) => ({ ...p, description: e.target.value }))} className="resize-none border-border/60 focus-visible:ring-rose-gold/30" />
-                <p className="text-[10px] text-muted-foreground">Se agregará automáticamente: "{TAGLINE}"</p>
+                <p className="text-[10px] text-muted-foreground">Se agregará automáticamente: "{adminDiscipline === 'joyeria' ? TAGLINE_JEWELRY : TAGLINE_GENERAL}"</p>
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
@@ -714,7 +738,7 @@ function AdminUpload() {
                   <Select value={formData.category} onValueChange={(v) => setFormData((p) => ({ ...p, category: v }))}>
                     <SelectTrigger className="border-border/60 focus:ring-rose-gold/30"><SelectValue placeholder="Selecciona" /></SelectTrigger>
                     <SelectContent>
-                      {UPLOAD_CATEGORIES.map((cat) => (<SelectItem key={cat} value={cat.toLowerCase()}>{cat}</SelectItem>))}
+                      {adminCategories.map((cat) => (<SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>))}
                     </SelectContent>
                   </Select>
                 </div>

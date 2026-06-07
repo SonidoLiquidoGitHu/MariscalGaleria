@@ -171,7 +171,7 @@ function SidebarContent({
               transition={{ duration: 0.15, delay: 0.05 }}
               className="mt-1 whitespace-nowrap text-[11px] font-medium tracking-widest text-muted-foreground/70 uppercase"
             >
-              Joyería de Autor · Plata 925
+              Galería de Arte · Zacatecas México
             </motion.p>
           )}
         </AnimatePresence>

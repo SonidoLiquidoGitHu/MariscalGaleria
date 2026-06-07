@@ -1,5 +1,6 @@
-import { type Product } from '@/lib/store'
+import { type Product, type Discipline } from '@/lib/store'
 
+// ─── Image sets per discipline ───────────────────────────────────────────────
 const SILVER_JEWELRY_IMAGES = [
   'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=400&fit=crop',
   'https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?w=400&h=400&fit=crop',
@@ -11,15 +12,116 @@ const SILVER_JEWELRY_IMAGES = [
   'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop',
 ]
 
-const TAGLINE = 'joyería de autor, plata 925, Zacatecas México'
+const SCULPTURE_IMAGES = [
+  'https://images.unsplash.com/photo-1544413660-299165566b1d?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1561839561-b13bcfe95249?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1578301978162-7aae4d755744?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=400&fit=crop',
+]
 
+const ENGRAVING_IMAGES = [
+  'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=400&h=400&fit=crop',
+]
+
+const PAINTING_IMAGES = [
+  'https://images.unsplash.com/photo-1579783900882-c0d3dad7b11a?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1549490349-8643362247b5?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=400&h=400&fit=crop',
+  'https://images.unsplash.com/photo-1578926288207-a90a5366759d?w=400&h=400&fit=crop',
+]
+
+const TAGLINE_JEWELRY = 'joyería de autor, plata 925, Zacatecas México'
+const TAGLINE_GENERAL = 'arte de autor, Zacatecas México'
+
+// ─── Discipline definitions ──────────────────────────────────────────────────
+export const DISCIPLINES: { value: Discipline; label: string; description: string }[] = [
+  { value: 'joyeria', label: 'Joyería', description: 'Plata 925 · Piezas de Autor' },
+  { value: 'escultura', label: 'Escultura', description: 'Forma · Volumen · Expresión' },
+  { value: 'grabado', label: 'Grabado', description: 'Estampa · Tinta · Matriz' },
+  { value: 'pintura', label: 'Pintura', description: 'Color · Lienzo · Visión' },
+]
+
+// ─── Categories per discipline ───────────────────────────────────────────────
+export interface Category {
+  value: string
+  label: string
+}
+
+export const CATEGORIES_BY_DISCIPLINE: Record<Discipline, Category[]> = {
+  joyeria: [
+    { value: 'all', label: 'Todas las Piezas' },
+    { value: 'anillos', label: 'Anillos' },
+    { value: 'collares', label: 'Collares' },
+    { value: 'pulseras', label: 'Pulseras' },
+    { value: 'aretes', label: 'Aretes' },
+    { value: 'dijes', label: 'Dijes' },
+    { value: 'sets', label: 'Sets' },
+  ],
+  escultura: [
+    { value: 'all', label: 'Todas las Obras' },
+    { value: 'figurativa', label: 'Figurativa' },
+    { value: 'abstracta', label: 'Abstracta' },
+    { value: 'relieve', label: 'Relieve' },
+    { value: 'instalacion', label: 'Instalación' },
+  ],
+  grabado: [
+    { value: 'all', label: 'Todas las Obras' },
+    { value: 'xilografia', label: 'Xilografía' },
+    { value: 'aguafuerte', label: 'Aguafuerte' },
+    { value: 'litografia', label: 'Litografía' },
+    { value: 'serigrafia', label: 'Serigrafía' },
+  ],
+  pintura: [
+    { value: 'all', label: 'Todas las Obras' },
+    { value: 'oleo', label: 'Óleo' },
+    { value: 'acrilico', label: 'Acrílico' },
+    { value: 'acuarela', label: 'Acuarela' },
+    { value: 'mixta', label: 'Técnica Mixta' },
+  ],
+}
+
+// ─── Backwards-compatible flat CATEGORIES (defaults to joyeria) ──────────────
+export const CATEGORIES = CATEGORIES_BY_DISCIPLINE.joyeria
+
+// ─── All categories for upload forms ─────────────────────────────────────────
+export const ALL_CATEGORIES_FLAT: { discipline: Discipline; category: string; label: string }[] = [
+  // Joyería
+  { discipline: 'joyeria', category: 'anillos', label: 'Anillos' },
+  { discipline: 'joyeria', category: 'collares', label: 'Collares' },
+  { discipline: 'joyeria', category: 'pulseras', label: 'Pulseras' },
+  { discipline: 'joyeria', category: 'aretes', label: 'Aretes' },
+  { discipline: 'joyeria', category: 'dijes', label: 'Dijes' },
+  { discipline: 'joyeria', category: 'sets', label: 'Sets' },
+  // Escultura
+  { discipline: 'escultura', category: 'figurativa', label: 'Figurativa' },
+  { discipline: 'escultura', category: 'abstracta', label: 'Abstracta' },
+  { discipline: 'escultura', category: 'relieve', label: 'Relieve' },
+  { discipline: 'escultura', category: 'instalacion', label: 'Instalación' },
+  // Grabado
+  { discipline: 'grabado', category: 'xilografia', label: 'Xilografía' },
+  { discipline: 'grabado', category: 'aguafuerte', label: 'Aguafuerte' },
+  { discipline: 'grabado', category: 'litografia', label: 'Litografía' },
+  { discipline: 'grabado', category: 'serigrafia', label: 'Serigrafía' },
+  // Pintura
+  { discipline: 'pintura', category: 'oleo', label: 'Óleo' },
+  { discipline: 'pintura', category: 'acrilico', label: 'Acrílico' },
+  { discipline: 'pintura', category: 'acuarela', label: 'Acuarela' },
+  { discipline: 'pintura', category: 'mixta', label: 'Técnica Mixta' },
+]
+
+// ─── Demo products ───────────────────────────────────────────────────────────
 export const DEMO_PRODUCTS: Product[] = [
+  // ═══ JOYERÍA ═══
   {
     id: 'demo-1',
     name: 'Anillo Luna Celestial',
-    description: `Anillo artesanal en plata 925 con motivo de luna creciente y acento de circonia cúbica — ${TAGLINE}`,
+    description: `Anillo artesanal en plata 925 con motivo de luna creciente y acento de circonia cúbica — ${TAGLINE_JEWELRY}`,
     price: 1899.99,
     category: 'anillos',
+    discipline: 'joyeria',
     sku: 'RG-001',
     isFeatured: true,
     isActive: true,
@@ -30,9 +132,10 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     id: 'demo-2',
     name: 'Collar Cadena Susurro',
-    description: `Collar de cadena delicada en plata 925 con dije minimalista, perfecto para capas — ${TAGLINE}`,
+    description: `Collar de cadena delicada en plata 925 con dije minimalista, perfecto para capas — ${TAGLINE_JEWELRY}`,
     price: 2499.99,
     category: 'collares',
+    discipline: 'joyeria',
     sku: 'NK-002',
     isFeatured: true,
     isActive: true,
@@ -43,9 +146,10 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     id: 'demo-3',
     name: 'Pulsera Cuff Etérea',
-    description: `Pulsera tipo cuff de punta abierta en plata 925 pulida con diseño orgánico fluido — ${TAGLINE}`,
+    description: `Pulsera tipo cuff de punta abierta en plata 925 pulida con diseño orgánico fluido — ${TAGLINE_JEWELRY}`,
     price: 2899.99,
     category: 'pulseras',
+    discipline: 'joyeria',
     sku: 'BR-003',
     isFeatured: true,
     isActive: true,
@@ -56,9 +160,10 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     id: 'demo-4',
     name: 'Aretes Gota de Cristal',
-    description: `Aretes elegantes tipo gota en montura de plata 925 con cristales transparentes — ${TAGLINE}`,
+    description: `Aretes elegantes tipo gota en montura de plata 925 con cristales transparentes — ${TAGLINE_JEWELRY}`,
     price: 1399.99,
     category: 'aretes',
+    discipline: 'joyeria',
     sku: 'ER-004',
     isFeatured: false,
     isActive: true,
@@ -69,9 +174,10 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     id: 'demo-5',
     name: 'Anillo Infinito',
-    description: `Diseño simbólico de infinito en plata oxidada con detalles pulidos — ${TAGLINE}`,
+    description: `Diseño simbólico de infinito en plata oxidada con detalles pulidos — ${TAGLINE_JEWELRY}`,
     price: 1599.99,
     category: 'anillos',
+    discipline: 'joyeria',
     sku: 'RG-005',
     isFeatured: false,
     isActive: true,
@@ -82,9 +188,10 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     id: 'demo-6',
     name: 'Gargantilla Riviera',
-    description: `Gargantilla statement en plata 925 con elementos geométricos entrelazados — ${TAGLINE}`,
+    description: `Gargantilla statement en plata 925 con elementos geométricos entrelazados — ${TAGLINE_JEWELRY}`,
     price: 3699.99,
     category: 'collares',
+    discipline: 'joyeria',
     sku: 'NK-006',
     isFeatured: true,
     isActive: true,
@@ -95,9 +202,10 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     id: 'demo-7',
     name: 'Set Pulseras Onda',
-    description: `Set de 3 pulseras apilables con textura inspirada en las olas en plata cepillada — ${TAGLINE}`,
+    description: `Set de 3 pulseras apilables con textura inspirada en las olas en plata cepillada — ${TAGLINE_JEWELRY}`,
     price: 2299.99,
     category: 'pulseras',
+    discipline: 'joyeria',
     sku: 'BR-007',
     isFeatured: false,
     isActive: true,
@@ -108,9 +216,10 @@ export const DEMO_PRODUCTS: Product[] = [
   {
     id: 'demo-8',
     name: 'Aretes Perla Clásica',
-    description: `Perlas clásicas sobre postes de plata 925 con seguros mariposa — ${TAGLINE}`,
+    description: `Perlas clásicas sobre postes de plata 925 con seguros mariposa — ${TAGLINE_JEWELRY}`,
     price: 1199.99,
     category: 'aretes',
+    discipline: 'joyeria',
     sku: 'ER-008',
     isFeatured: false,
     isActive: true,
@@ -118,15 +227,194 @@ export const DEMO_PRODUCTS: Product[] = [
     createdAt: new Date().toISOString(),
     sortOrder: 7,
   },
+
+  // ═══ ESCULTURA ═══
+  {
+    id: 'demo-esc-1',
+    name: 'Metamorfosis I',
+    description: `Escultura en bronce patinado que explora la transformación del cuerpo humano en formas orgánicas fluidas — ${TAGLINE_GENERAL}`,
+    price: 18500,
+    category: 'figurativa',
+    discipline: 'escultura',
+    sku: 'ESC-001',
+    isFeatured: true,
+    isActive: true,
+    media: [SCULPTURE_IMAGES[0]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 8,
+  },
+  {
+    id: 'demo-esc-2',
+    name: 'Equilibrio Inestable',
+    description: `Pieza en mármol blanco que juega con la tensión entre masa y vacío, lo pesado y lo etéreo — ${TAGLINE_GENERAL}`,
+    price: 24000,
+    category: 'abstracta',
+    discipline: 'escultura',
+    sku: 'ESC-002',
+    isFeatured: true,
+    isActive: true,
+    media: [SCULPTURE_IMAGES[1]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 9,
+  },
+  {
+    id: 'demo-esc-3',
+    name: 'Raíces de Plata',
+    description: `Relieve en plata 925 y madera de mezquite que fusiona la orfebrería zacatecana con la escultura contemporánea — ${TAGLINE_GENERAL}`,
+    price: 12800,
+    category: 'relieve',
+    discipline: 'escultura',
+    sku: 'ESC-003',
+    isFeatured: false,
+    isActive: true,
+    media: [SCULPTURE_IMAGES[2]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 10,
+  },
+  {
+    id: 'demo-esc-4',
+    name: 'Territorio Interior',
+    description: `Instalación escultórica con piezas modulares en cerámica y metal que invitan al espectador a recorrer el espacio — ${TAGLINE_GENERAL}`,
+    price: 35000,
+    category: 'instalacion',
+    discipline: 'escultura',
+    sku: 'ESC-004',
+    isFeatured: false,
+    isActive: true,
+    media: [SCULPTURE_IMAGES[3]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 11,
+  },
+
+  // ═══ GRABADO ═══
+  {
+    id: 'demo-grb-1',
+    name: 'Noche Zacatecana',
+    description: `Xilografía en tinta negra sobre papel de algodón que captura la arquitectura colonial bajo la luna — ${TAGLINE_GENERAL}`,
+    price: 4500,
+    category: 'xilografia',
+    discipline: 'grabado',
+    sku: 'GRB-001',
+    isFeatured: true,
+    isActive: true,
+    media: [ENGRAVING_IMAGES[0]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 12,
+  },
+  {
+    id: 'demo-grb-2',
+    name: 'Erosión del Silencio',
+    description: `Aguafuerte con aguatinta que explora la descomposición del paisaje minero de Zacatecas — ${TAGLINE_GENERAL}`,
+    price: 5200,
+    category: 'aguafuerte',
+    discipline: 'grabado',
+    sku: 'GRB-002',
+    isFeatured: true,
+    isActive: true,
+    media: [ENGRAVING_IMAGES[1]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 13,
+  },
+  {
+    id: 'demo-grb-3',
+    name: 'Cartografía de la Memoria',
+    description: `Litografía a cuatro tintas que mapea los recorridos emocionales del artista por el altiplano — ${TAGLINE_GENERAL}`,
+    price: 6800,
+    category: 'litografia',
+    discipline: 'grabado',
+    sku: 'GRB-003',
+    isFeatured: false,
+    isActive: true,
+    media: [ENGRAVING_IMAGES[2]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 14,
+  },
+  {
+    id: 'demo-grb-4',
+    name: 'Trama y Devanado',
+    description: `Serigrafía con capas superpuestas de color que rinde homenaje a los textiles zacatecanos — ${TAGLINE_GENERAL}`,
+    price: 3800,
+    category: 'serigrafia',
+    discipline: 'grabado',
+    sku: 'GRB-004',
+    isFeatured: false,
+    isActive: true,
+    media: [ENGRAVING_IMAGES[3]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 15,
+  },
+
+  // ═══ PINTURA ═══
+  {
+    id: 'demo-pnt-1',
+    name: 'Horizonte Quebrado',
+    description: `Óleo sobre lienzo de gran formato que captura la vastedad del paisaje zacatecano con pinceladas enérgicas — ${TAGLINE_GENERAL}`,
+    price: 22000,
+    category: 'oleo',
+    discipline: 'pintura',
+    sku: 'PNT-001',
+    isFeatured: true,
+    isActive: true,
+    media: [PAINTING_IMAGES[0]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 16,
+  },
+  {
+    id: 'demo-pnt-2',
+    name: 'Réquiem de Barro',
+    description: `Acrílico sobre tela con texturas en relieve que evocan las fachadas desmoronadas del centro histórico — ${TAGLINE_GENERAL}`,
+    price: 15000,
+    category: 'acrilico',
+    discipline: 'pintura',
+    sku: 'PNT-002',
+    isFeatured: true,
+    isActive: true,
+    media: [PAINTING_IMAGES[1]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 17,
+  },
+  {
+    id: 'demo-pnt-3',
+    name: 'Luz de Mina',
+    description: `Acuarela que juega con la transparencia y la luz filtrada en los túneles de la Mina El Edén — ${TAGLINE_GENERAL}`,
+    price: 8500,
+    category: 'acuarela',
+    discipline: 'pintura',
+    sku: 'PNT-003',
+    isFeatured: false,
+    isActive: true,
+    media: [PAINTING_IMAGES[2]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 18,
+  },
+  {
+    id: 'demo-pnt-4',
+    name: 'Canto de Plata',
+    description: `Técnica mixta con hoja de plata, óleo y collage que celebra la tradición platera de Zacatecas — ${TAGLINE_GENERAL}`,
+    price: 19000,
+    category: 'mixta',
+    discipline: 'pintura',
+    sku: 'PNT-004',
+    isFeatured: false,
+    isActive: true,
+    media: [PAINTING_IMAGES[3]],
+    createdAt: new Date().toISOString(),
+    sortOrder: 19,
+  },
 ]
 
+// ─── Demo hashtags ───────────────────────────────────────────────────────────
 export const DEMO_HASHTAGS = [
   { id: 'ht-1', name: 'Plata Esencial', hashtags: ['#Plata925', '#JoyeriaDePlata', '#SterlingSilver', '#Plata925Mexico', '#PlataPura', '#DiseñoPlata', '#ArtePlata', '#JoyeriaAdicta'], category: 'general', usageCount: 24 },
   { id: 'ht-2', name: 'Vibras de Lujo', hashtags: ['#JoyeriaDeLujo', '#Finajoyeria', '#EstiloElegante', '#BellezaAtemporal', '#AmantesJoyeria', '#VidaDeLujo', '#JoyeriaChic', '#EstiloClasico'], category: 'lujo', usageCount: 18 },
   { id: 'ht-3', name: 'Colección Anillos', hashtags: ['#AnilloPlata', '#Anillos925', '#ColeccionAnillos', '#AnilloPromesa', '#AnilloStatement', '#AnilloMinimal', '#StackAnillos', '#EstiloAnillos'], category: 'anillos', usageCount: 31 },
   { id: 'ht-4', name: 'Tendencias', hashtags: ['#TendenciasJoyeria', '#Joyeria2025', '#TendenciaActual', '#MustHave', '#InspiracionEstilo', '#OOTD', '#JoyeriaGram', '#InstaJoyeria'], category: 'tendencias', usageCount: 15 },
+  { id: 'ht-5', name: 'Escultura Contemporánea', hashtags: ['#Escultura', '#ArteEscultorico', '#Sculpture', '#ArteContemporaneo', '#EsculturaMexicana', '#TresDimensiones', '#FormaYVolumen', '#ArteZacatecas'], category: 'escultura', usageCount: 12 },
+  { id: 'ht-6', name: 'Grabado Artístico', hashtags: ['#Grabado', '#Xilografia', '#Aguafuerte', '#Litografia', '#Serigrafia', '#Printmaking', '#Estampa', '#ArteGrafico'], category: 'grabado', usageCount: 9 },
+  { id: 'ht-7', name: 'Pintura de Autor', hashtags: ['#Pintura', '#OleoSobreLienzo', '#ArtePictorico', '#PinturaMexicana', '#Acuarela', '#TecnicaMixta', '#ArteVisual', '#PintorMexicano'], category: 'pintura', usageCount: 16 },
 ]
 
+// ─── Demo analytics ──────────────────────────────────────────────────────────
 export const DEMO_ANALYTICS = [
   { date: '2026-05-01', likes: 245, comments: 32, shares: 18, reach: 4200, platform: 'instagram' },
   { date: '2026-05-02', likes: 312, comments: 45, shares: 22, reach: 5100, platform: 'instagram' },
@@ -142,14 +430,4 @@ export const DEMO_ANALYTICS = [
   { date: '2026-05-12', likes: 523, comments: 72, shares: 45, reach: 7800, platform: 'instagram' },
   { date: '2026-05-13', likes: 345, comments: 41, shares: 27, reach: 5100, platform: 'facebook' },
   { date: '2026-05-14', likes: 478, comments: 63, shares: 39, reach: 7000, platform: 'instagram' },
-]
-
-export const CATEGORIES = [
-  { value: 'all', label: 'Todas las Piezas' },
-  { value: 'anillos', label: 'Anillos' },
-  { value: 'collares', label: 'Collares' },
-  { value: 'pulseras', label: 'Pulseras' },
-  { value: 'aretes', label: 'Aretes' },
-  { value: 'dijes', label: 'Dijes' },
-  { value: 'sets', label: 'Sets' },
 ]
