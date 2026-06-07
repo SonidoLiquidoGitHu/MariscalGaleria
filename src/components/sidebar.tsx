@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useTheme } from 'next-themes'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Gem,
@@ -12,8 +11,6 @@ import {
   Hash,
   Sparkles,
   Shield,
-  Sun,
-  Moon,
   PanelLeftClose,
   PanelLeftOpen,
   Menu,
@@ -70,8 +67,8 @@ function NavItem({
         'group relative flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-gold focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar',
         isActive
-          ? 'bg-rose-gold/15 text-white'
-          : 'text-silver-dark hover:bg-sidebar-accent hover:text-sidebar-foreground'
+          ? 'bg-rose-gold/15 text-foreground'
+          : 'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground'
       )}
       aria-current={isActive ? 'page' : undefined}
     >
@@ -88,7 +85,7 @@ function NavItem({
       <span
         className={cn(
           'flex h-5 w-5 shrink-0 items-center justify-center transition-colors duration-200',
-          isActive ? 'text-rose-gold' : 'text-silver-dark group-hover:text-sidebar-foreground'
+          isActive ? 'text-rose-gold' : 'text-muted-foreground group-hover:text-sidebar-foreground'
         )}
       >
         <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.2 : 1.8} />
@@ -135,15 +132,10 @@ function SidebarContent({
   onClose?: () => void
 }) {
   const { activeSection, setActiveSection } = useAppStore()
-  const { theme, setTheme } = useTheme()
 
   const handleNavClick = (section: Section) => {
     setActiveSection(section)
     onClose?.()
-  }
-
-  const toggleTheme = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
   return (
@@ -177,7 +169,7 @@ function SidebarContent({
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15, delay: 0.05 }}
-              className="mt-1 whitespace-nowrap text-[11px] font-medium tracking-widest text-silver-dark/70 uppercase"
+              className="mt-1 whitespace-nowrap text-[11px] font-medium tracking-widest text-muted-foreground/70 uppercase"
             >
               Joyería de Autor · Plata 925
             </motion.p>
@@ -203,85 +195,6 @@ function SidebarContent({
 
       {/* ── Bottom actions ─────────────────────────────────────────────── */}
       <div className="shrink-0 border-t border-sidebar-border px-2 py-3">
-        {/* Dark mode toggle */}
-        {collapsed ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button
-                onClick={toggleTheme}
-                className={cn(
-                  'flex w-full items-center justify-center rounded-lg px-3 py-2.5 text-sm transition-all duration-200',
-                  'text-silver-dark hover:bg-sidebar-accent hover:text-sidebar-foreground',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-gold'
-                )}
-                aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-              >
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.span
-                    key={theme}
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex h-5 w-5 items-center justify-center"
-                  >
-                    {theme === 'dark' ? (
-                      <Sun className="h-[18px] w-[18px]" strokeWidth={1.8} />
-                    ) : (
-                      <Moon className="h-[18px] w-[18px]" strokeWidth={1.8} />
-                    )}
-                  </motion.span>
-                </AnimatePresence>
-              </button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={12}>
-              {theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
-            </TooltipContent>
-          </Tooltip>
-        ) : (
-          <button
-            onClick={toggleTheme}
-            className={cn(
-              'flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
-              'text-silver-dark hover:bg-sidebar-accent hover:text-sidebar-foreground',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-gold'
-            )}
-            aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-          >
-            <span className="flex h-5 w-5 shrink-0 items-center justify-center">
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.span
-                  key={theme}
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="flex items-center justify-center"
-                >
-                  {theme === 'dark' ? (
-                    <Sun className="h-[18px] w-[18px]" strokeWidth={1.8} />
-                  ) : (
-                    <Moon className="h-[18px] w-[18px]" strokeWidth={1.8} />
-                  )}
-                </motion.span>
-              </AnimatePresence>
-            </span>
-            <AnimatePresence mode="wait" initial={false}>
-              {!collapsed && (
-                <motion.span
-                  initial={{ opacity: 0, width: 0 }}
-                  animate={{ opacity: 1, width: 'auto' }}
-                  exit={{ opacity: 0, width: 0 }}
-                  transition={{ duration: 0.15, ease: 'easeInOut' }}
-                  className="overflow-hidden whitespace-nowrap"
-                >
-                  {theme === 'dark' ? 'Modo Claro' : 'Modo Oscuro'}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </button>
-        )}
-
         {/* Collapse toggle (desktop only) */}
         <CollapseButton collapsed={collapsed} />
       </div>
@@ -301,7 +214,7 @@ function CollapseButton({ collapsed }: { collapsed: boolean }) {
             onClick={toggleSidebar}
             className={cn(
               'mt-1 flex w-full items-center justify-center rounded-lg px-3 py-2.5 text-sm transition-all duration-200',
-              'text-silver-dark hover:bg-sidebar-accent hover:text-sidebar-foreground',
+              'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-gold'
             )}
             aria-label="Expandir menú lateral"
@@ -321,7 +234,7 @@ function CollapseButton({ collapsed }: { collapsed: boolean }) {
       onClick={toggleSidebar}
       className={cn(
         'mt-1 flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
-        'text-silver-dark hover:bg-sidebar-accent hover:text-sidebar-foreground',
+        'text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-gold'
       )}
       aria-label="Colapsar menú lateral"
@@ -357,7 +270,7 @@ export default function Sidebar() {
           onClick={() => setMobileOpen(true)}
           className={cn(
             'fixed left-4 top-4 z-40 flex h-10 w-10 items-center justify-center rounded-lg',
-            'bg-sidebar text-sidebar-foreground shadow-lg transition-colors hover:bg-sidebar-accent',
+            'bg-card text-foreground shadow-lg transition-colors hover:bg-secondary',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-gold'
           )}
           aria-label="Open navigation menu"
@@ -389,7 +302,7 @@ export default function Sidebar() {
       transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
       className={cn(
         'relative z-30 flex h-screen shrink-0 flex-col overflow-hidden',
-        'border-r border-sidebar-border shadow-[2px_0_16px_rgba(0,0,0,0.08)]',
+        'border-r border-sidebar-border shadow-[2px_0_12px_rgba(0,0,0,0.04)]',
         'dark:shadow-[2px_0_16px_rgba(0,0,0,0.3)]'
       )}
       aria-label="Sidebar navigation"

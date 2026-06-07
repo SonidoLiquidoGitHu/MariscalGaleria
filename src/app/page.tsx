@@ -63,7 +63,7 @@ function AppContent() {
 
 export default function Home() {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+    <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} forcedTheme="light">
       <TooltipProvider delayDuration={200}>
         <AppContent />
       </TooltipProvider>
